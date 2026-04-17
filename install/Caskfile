@@ -1,0 +1,6 @@
+cask "brave-browser"
+cask "fork"
+cask "raycast"
+cask "rectangle"
+cask "visual-studio-code"
+cask "vlc"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# git p - push with auto --set-upstream for new branches
+
+br=$(git symbolic-ref --quiet --short HEAD 2>/dev/null)
+
+if [ -n "$br" ] && ! git ls-remote --exit-code --heads origin "$br" >/dev/null 2>&1; then
+  exec git push --set-upstream origin "$br" "$@"
+fi
+
+exec git push "$@"

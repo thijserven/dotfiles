@@ -1,0 +1,30 @@
+tap "FelixKratz/formulae"
+tap "lotyp/homebrew-formulae"
+
+# core/dotfiles
+brew "bats-core"
+brew "coreutils"
+brew "duti"
+brew "lotyp/formulae/dockutil"
+brew "nano"
+brew "stow"
+brew "topgrade"
+
+# fs/network
+brew "wget"
+brew "zoxide"
+
+# search/grep/diff
+brew "gnu-sed"
+brew "grep"
+
+# languages/tools
+brew "n"
+brew "python"
+
+# misc
+brew "grip"
+brew "mole"
+
+# ui
+brew "borders"

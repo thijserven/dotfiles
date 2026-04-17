@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# git rb "message" - squash all branch commits into one and force-push
+
+msg="$1"
+if [ -z "$msg" ]; then
+  echo 'usage: git rb "commit message"' >&2
+  exit 2
+fi
+
+br=$(git symbolic-ref --quiet --short HEAD 2>/dev/null)
+if [ -z "$br" ]; then
+  echo "not on a branch" >&2
+  exit 2
+fi
+
+# Find source branch: reflog → upstream → origin/HEAD → develop
+src=$(git reflog show --format=%gs "$br" 2>/dev/null | sed -n 's/^branch: Created from //p' | head -n1)
+[ "$src" = "HEAD" ] || [ "$src" = "$br" ] && src=
+
+if [ -z "$src" ]; then
+  up=$(git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}" 2>/dev/null)
+  up=${up#origin/}
+  [ "$up" != "$br" ] && src=$up
+fi
+
+if [ -z "$src" ]; then
+  ohead=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
+  ohead=${ohead#origin/}
+  [ "$ohead" != "$br" ] && src=$ohead
+fi
+
+src=${src:-develop}
+
+mb=$(git merge-base "$src" HEAD)
+git reset --soft "$mb"
+
+if git diff --cached --quiet; then
+  echo "nothing to commit after reset from $src" >&2
+  exit 1
+fi
+
+git commit -m "$msg" && git push --force-with-lease origin "$br"

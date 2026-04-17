@@ -1,0 +1,96 @@
+[user]
+	name = Thijs Erven
+	email = thijserven@gmail.com
+
+[github]
+	user = thijserven
+
+[core]
+	excludesfile = ~/.config/git/ignore
+	filemode = false
+	trustctime = false
+	autocrlf = input
+	untrackedCache = true
+	pager = delta
+	ignorecase = false
+
+[pull]
+	rebase = true
+
+[rerere]
+	enabled = true
+
+[rebase]
+	autoStash = true
+
+[init]
+	defaultBranch = master
+
+[push]
+	default = simple
+	followTags = true
+
+[fetch]
+	prune = true
+
+[grep]
+	lineNumber = true
+
+[help]
+	autocorrect = 1
+
+[alias]
+	a = add --all
+	br = branch
+	c = commit --m
+	cl = clone
+	co = checkout
+	d = diff
+	f = fetch
+	p = !git-p
+	pl = pull
+	pnv = push --no-verify
+	rb = !git-rb
+	s = status
+
+[diff]
+	renames = copies
+	indentHeuristic = true
+	colorMoved = default
+	tool = vscode
+
+[difftool]
+	prompt = false
+
+[difftool "vscode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+	path =
+
+[merge]
+	conflictstyle = diff3
+	defaultToUpstream = true
+	tool = vscode
+
+[mergetool]
+	prompt = false
+
+[mergetool "vscode"]
+	cmd = code --wait $MERGED
+	trustExitCode = true
+
+[delta]
+	light = false
+	navigate = true
+
+[color]
+	ui = auto
+
+[versionsort]
+	suffix = -alpha
+	suffix = -beta
+	suffix = -canary
+	suffix = -rc
+	suffix = -next
+
+[advice]
+	detachedHead = false
