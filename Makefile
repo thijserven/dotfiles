@@ -64,7 +64,7 @@ link: stow-$(OS)
 	chmod 700 $(HOME)/.local/runtime
 
 services: brew-packages link
-	brew services restart borders
+	is-executable borders && brew services restart borders || true
 
 unlink: stow-$(OS)
 	stow --delete -t "$(HOME)" runcom

@@ -9,6 +9,7 @@ jobs:
   install:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-14, macos-15, ubuntu-latest]
 
@@ -28,7 +29,7 @@ jobs:
         run: sudo softwareupdate -i -a
 
       - name: Clone this repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install using Makefile
         run: |
