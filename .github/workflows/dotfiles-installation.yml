@@ -8,8 +8,9 @@ on:
 jobs:
   install:
     runs-on: ${{ matrix.os }}
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     strategy:
-      fail-fast: false
       matrix:
         os: [macos-14, macos-15, ubuntu-latest]
 

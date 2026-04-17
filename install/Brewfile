@@ -1,6 +1,3 @@
-tap "FelixKratz/formulae"
-tap "lotyp/homebrew-formulae"
-
 # core/dotfiles
 brew "bats-core"
 brew "coreutils"
@@ -27,4 +24,4 @@ brew "grip"
 brew "mole"
 
 # ui
-brew "borders"
+brew "FelixKratz/formulae/borders"
