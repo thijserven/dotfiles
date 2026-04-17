@@ -25,7 +25,7 @@ PATH="$DOTFILES_DIR/bin:$PATH"
 
 [ -f "$DOTFILES_DIR/local/.profile" ] && . "$DOTFILES_DIR/local/.profile"
 
-for DOTFILE in "$DOTFILES_DIR"/system/.{n,path,env,alias,grep,prompt,completion,fix,pnpm,zoxide}; do
+for DOTFILE in "$DOTFILES_DIR"/system/.{n,path,env,alias,grep,starship,completion,pnpm,zoxide}; do
   . "$DOTFILE"
 done
 
@@ -34,10 +34,6 @@ if is-macos; then
     . "$DOTFILE"
   done
 fi
-
-# Set LSCOLORS
-
-eval "$(dircolors -b "$DOTFILES_DIR"/system/.dir_colors)"
 
 # Wrap up
 

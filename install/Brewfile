@@ -4,6 +4,7 @@ brew "coreutils"
 brew "duti"
 brew "lotyp/formulae/dockutil"
 brew "nano"
+brew "starship"
 brew "stow"
 brew "topgrade"
 
