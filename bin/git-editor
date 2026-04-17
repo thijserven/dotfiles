@@ -1,6 +1,0 @@
-#!/bin/sh
-if command -v code >/dev/null 2>&1; then
-    exec code --wait "$@"
-else
-    exec "$EDITOR" "$@"
-fi
