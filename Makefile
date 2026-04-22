@@ -117,7 +117,7 @@ vscode-extensions: cask-apps
 node-packages: npm
 	$(N_PREFIX)/bin/npm install --force --location global $(shell cat install/npmfile)
 
-brave-extensions: sudo
+brave-extensions:
 	DOTFILES_DIR=$(DOTFILES_DIR) bash $(DOTFILES_DIR)/macos/brave-extensions.sh
 
 duti:

@@ -24,7 +24,7 @@ git clone https://github.com/thijserven/dotfiles.git ~/.dotfiles
 ```
 
 2. Use the [Makefile](./Makefile) to install the [packages listed above](#packages-overview), and symlink
-   [runcom](./runcom) and [config](./config) files (using [stow](https://www.gnu.org/software/stow/)):
+   [runcom](./runcom) and [config](./config) files (using [stow](https://www.gnu.org/software/stow)):
 
 ```bash
 cd ~/.dotfiles
