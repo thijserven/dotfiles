@@ -6,9 +6,9 @@ defaults write com.knollsoft.Rectangle launchOnLogin -bool true
 defaults write com.knollsoft.Rectangle alternateDefaultShortcuts -bool true
 defaults write com.knollsoft.Rectangle subsequentExecutionMode -int 1
 defaults write com.knollsoft.Rectangle windowSnapping -int 2
-defaults write com.knollsoft.Rectangle almostMaximizeHeight -float 0.9
-defaults write com.knollsoft.Rectangle almostMaximizeWidth -float 0.9
-defaults write com.knollsoft.Rectangle gapSize -float 10
+defaults write com.knollsoft.Rectangle almostMaximizeHeight -float 1
+defaults write com.knollsoft.Rectangle almostMaximizeWidth -float 1
+defaults write com.knollsoft.Rectangle gapSize -float 2.5
 defaults write com.knollsoft.Rectangle moveCursorAcrossDisplays -bool true
 defaults write com.knollsoft.Rectangle unsnapRestore -int 1
 defaults write com.knollsoft.Rectangle hideMenuBarIcon -bool false

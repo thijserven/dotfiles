@@ -1,0 +1,6 @@
+# Brave browser extensions to force-install via managed preferences policy
+# One Chrome Web Store extension ID per line
+# Find the ID in the extension's Chrome Web Store URL or its details page
+
+# Bitwarden - Password Manager
+nngceckbapebfimnlniiiahkandclblb

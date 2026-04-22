@@ -16,7 +16,7 @@ all: $(OS)
 
 VSCODE_DIR := $(HOME)/Library/Application Support/Code/User
 
-macos: sudo core-macos packages-macos link services duti bun vscode-extensions
+macos: sudo core-macos packages-macos link services duti bun vscode-extensions brave-extensions
 
 ubuntu: core-ubuntu link
 
@@ -116,6 +116,9 @@ vscode-extensions: cask-apps
 
 node-packages: npm
 	$(N_PREFIX)/bin/npm install --force --location global $(shell cat install/npmfile)
+
+brave-extensions: sudo
+	DOTFILES_DIR=$(DOTFILES_DIR) bash $(DOTFILES_DIR)/macos/brave-extensions.sh
 
 duti:
 	duti -v $(DOTFILES_DIR)/install/duti
