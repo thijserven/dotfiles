@@ -36,26 +36,14 @@ Running `make` with the Makefile is idempotent. The installation process in the 
 
 ## Post-Installation
 
-1. Set your Git credentials:
-
-```sh
-git config --global user.name "your name"
-git config --global user.email "your@email.com"
-git config --global github.user "your-github-username"
-```
-
-2. Set macOS [Dock items](./macos/dock.sh) and [system defaults](./macos/defaults.sh):
+1. Set macOS [Dock items](./macos/dock.sh) and [system defaults](./macos/defaults.sh):
 
 ```sh
 dot dock
 dot macos
 ```
 
-3. Populate this file with anything you need sourced in each shell:
-
-```sh
-touch ~/.dotfiles/local/.profile
-```
+2. Open the Bitwarden desktop app and sign in to your account
 
 ## The `dot` command
 

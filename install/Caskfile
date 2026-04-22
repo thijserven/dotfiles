@@ -1,3 +1,4 @@
+cask "bitwarden"
 cask "brave-browser"
 cask "fork"
 cask "raycast"
