@@ -16,7 +16,8 @@ jq '
   .global_desktopSettings_browserIntegrationFingerprintEnabled = true |
   .global_desktopSettings_openAtLogin = false |
   .global_desktopSettings_sshAgentEnabled = true |
-  .global_desktopSettings_trayEnabled = false
+  .global_desktopSettings_trayEnabled = false |
+  with_entries(if .key | test("_desktopSettings_sshAgentRememberAuthorizations$") then .value = "never" else . end)
 ' "$BW_DATA" > "$BW_DATA.tmp" && mv "$BW_DATA.tmp" "$BW_DATA"
 
 # Restart Bitwarden to pick up the new settings
