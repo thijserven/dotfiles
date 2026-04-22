@@ -45,6 +45,8 @@ dot macos
 
 2. Open the Bitwarden desktop app and sign in to your account
 
+Bitwarden desktop settings are applied via `dot macos` (see [macos/defaults-bitwarden.sh](./macos/defaults-bitwarden.sh)).
+
 ## The `dot` command
 
 ```
