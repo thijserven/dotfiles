@@ -1,0 +1,12 @@
+{
+  "exact": {
+    "global_desktopSettings_browserIntegrationEnabled": true,
+    "global_desktopSettings_browserIntegrationFingerprintEnabled": true,
+    "global_desktopSettings_openAtLogin": false,
+    "global_desktopSettings_sshAgentEnabled": true,
+    "global_desktopSettings_trayEnabled": false
+  },
+  "suffix": {
+    "_desktopSettings_sshAgentRememberAuthorizations": "never"
+  }
+}

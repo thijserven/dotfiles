@@ -45,7 +45,7 @@ dot macos
 
 2. Open the Bitwarden desktop app and sign in to your account
 
-Bitwarden desktop settings are applied via `dot macos` (see [macos/defaults-bitwarden.sh](./macos/defaults-bitwarden.sh)).
+Bitwarden desktop settings are tracked in [config/bitwarden/data.json](./config/bitwarden/data.json). Run `dot macos` to merge those managed settings into Bitwarden's live `data.json` without overwriting account/runtime state.
 
 ## The `dot` command
 
