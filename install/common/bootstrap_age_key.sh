@@ -120,10 +120,12 @@ unlock_vault() {
 
   case "$state" in
     unauthenticated)
+      printf 'Sign in with the Bitwarden account that contains the %s secure note.\n' "$note" >&2
       BW_SESSION=$(bw login --raw)
       export BW_SESSION
       ;;
     locked)
+      printf 'Unlock the Bitwarden account that contains the %s secure note.\n' "$note" >&2
       BW_SESSION=$(bw unlock --raw)
       export BW_SESSION
       ;;

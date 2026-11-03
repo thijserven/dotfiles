@@ -1,5 +1,7 @@
 # Dotfiles
 
+![Dotfiles cover](install/assets/cover.png)
+
 My Omarchy-inspired personal dotfiles managed with [chezmoi](https://chezmoi.io). Primarily focussed on MacOS, Linux support targets Debian/Ubuntu and Arch. Templates handle platform differences, age protects secrets, with identity recovery from Bitwarden before encrypted files are read.
 
 chezmoi copies rendered files into `$HOME`, not symlinks. [home/](home/README.md) is the source state; repository tooling, package definitions, assets, and documentation stay outside deployment. All `README.md` files are excluded by [`.chezmoiignore`](home/.chezmoiignore).

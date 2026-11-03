@@ -115,6 +115,10 @@
         "Value": false,
         "Status": "default"
       },
+      "browser.bookmarks.addedImportButton": {
+        "Value": false,
+        "Status": "default"
+      },
       "browser.newtabpage.activity-stream.showSponsoredTopSites": {
         "Value": false,
         "Status": "default"
