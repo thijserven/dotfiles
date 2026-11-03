@@ -5,7 +5,7 @@ LANGUAGES=(en nl)
 LOCALE="en_US@currency=EUR"
 MEASUREMENT_UNITS="Centimeters"
 SCREENSHOTS_FOLDER="${HOME}/Screenshots"
-WALLPAPER="${HOME}/.local/share/chezmoi/install/assets/wallpaper.webp"
+WALLPAPER="${HOME}/.local/share/chezmoi/assets/wallpaper.webp"
 
 # Computer & Host name
 configure_computer_name() {

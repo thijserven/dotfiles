@@ -1,6 +1,6 @@
 # Dotfiles
 
-![Dotfiles cover](install/assets/cover.png)
+![Dotfiles cover](assets/cover.png)
 
 My Omarchy-inspired personal dotfiles managed with [chezmoi](https://chezmoi.io). Primarily focussed on MacOS, Linux support targets Debian/Ubuntu and Arch. Templates handle platform differences, age protects secrets, with identity recovery from Bitwarden before encrypted files are read.
 
@@ -31,7 +31,7 @@ Follow [setup and daily usage](home/README.md) for prerequisites, bootstrap comm
 - [Hammerspoon](home/dot_hammerspoon/README.md) — macOS automation and login startup.
 - [macOS Library](home/Library/README.md) — macOS VS Code target paths.
 - [SSH](home/private_dot_ssh/README.md) — encrypted SSH configuration and keys.
-- [Assets](install/assets/README.md) — wallpaper used by macOS setup.
+- [Assets](assets/README.md) — wallpaper used by macOS setup.
 - [Keybindings](vendor/keybindings/README.md) — native Vicinae extension, modified from [Raycast Shortcut Library](https://github.com/raycast/extensions/tree/ff678517a421538e8533030aa447420631886169/extensions/shortcut-library); built from `vendor/`, not deployed as configuration.
 
 ## Package management
