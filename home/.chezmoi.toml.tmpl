@@ -1,0 +1,19 @@
+{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $bitwardenServer := promptStringOnce . "bitwardenServer" "Bitwarden server URL" "https://vault.bitwarden.com" -}}
+
+encryption = "age"
+
+[data]
+  email = {{ $email | quote }}
+  name = {{ $name | quote }}
+  bitwardenServer = {{ $bitwardenServer | quote }}
+  bitwardenNote = "CHEZMOI_AGE_SECRET_KEY"
+
+[age]
+  identity = "{{ .chezmoi.homeDir }}/.config/chezmoi/key.txt"
+  recipient = "age1w6ry9wkku47auugknzxkeswfgpvzztgtvrvj5cx436lzuw7y2clqau58us"
+
+[hooks.read-source-state.pre]
+  command = "/bin/sh"
+  args = [{{ joinPath .chezmoi.workingTree "install" "common" "bootstrap_age_key.sh" | quote }}, {{ $bitwardenServer | quote }}, "CHEZMOI_AGE_SECRET_KEY", "{{ .chezmoi.homeDir }}/.config/chezmoi/key.txt", "age1w6ry9wkku47auugknzxkeswfgpvzztgtvrvj5cx436lzuw7y2clqau58us", {{ .chezmoi.executable | quote }}]

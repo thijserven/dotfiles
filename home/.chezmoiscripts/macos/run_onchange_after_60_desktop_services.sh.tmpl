@@ -1,0 +1,7 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# AeroSpace agent: {{ include "private_Library/LaunchAgents/local.keepalive.aerospace.plist" | sha256sum }}
+# Hammerspoon agent: {{ include "private_Library/LaunchAgents/local.keepalive.hammerspoon.plist" | sha256sum }}
+# Vicinae agent: {{ include "private_Library/LaunchAgents/local.keepalive.vicinae.plist" | sha256sum }}
+{{ include "../install/macos/desktop_services.sh" }}
+{{- end }}

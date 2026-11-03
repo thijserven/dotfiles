@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+# Policy hash: {{ include "private_dot_config/firefox/policies.json" | sha256sum }}
+{{ include "../install/macos/firefox_policy.sh" }}
+{{- end }}

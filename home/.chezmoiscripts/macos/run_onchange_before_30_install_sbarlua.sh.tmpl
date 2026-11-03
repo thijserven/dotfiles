@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+# Packages: {{ include "../install/macos/packages.sh" | sha256sum }}
+# Package list: {{ include "../install/macos/packages.txt" | sha256sum }}
+# Runtimes: {{ include "private_dot_config/mise/config.toml" | sha256sum }}
+{{ include "../install/macos/sbarlua.sh" }}
+{{- end }}

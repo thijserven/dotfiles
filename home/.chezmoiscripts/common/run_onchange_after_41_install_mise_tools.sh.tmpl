@@ -1,0 +1,8 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+{{ else -}}
+export PATH="$HOME/.local/bin:$PATH"
+{{ end -}}
+# Global config: {{ include "private_dot_config/mise/config.toml" | sha256sum }}
+{{ include "../install/common/mise_tools.sh" }}

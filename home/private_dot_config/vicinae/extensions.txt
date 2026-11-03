@@ -1,0 +1,8 @@
+# Raycast store extensions: author/name, one per line.
+# Existing bundles stay untouched. Removing a line does not uninstall it.
+doist/todoist
+gebeto/translate
+HelloImSteven/sips
+rolandleth/kill-process
+thomas/color-picker
+thomas/visual-studio-code

@@ -1,0 +1,9 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+# Central runtimes: {{ include "private_dot_config/mise/config.toml" | sha256sum }}
+{{ range $file := list "package.json" "package-lock.json" "tsconfig.json" "src/data.ts" "src/browse.tsx" "assets/icon.svg" "tests/data.test.ts" "tests/bundle.cjs" -}}
+# {{ $file }}: {{ include (printf "../vendor/keybindings/%s" $file) | sha256sum }}
+{{ end -}}
+{{ include "../install/macos/keybindings.sh" }}
+{{- end }}

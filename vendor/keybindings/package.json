@@ -1,0 +1,67 @@
+{
+  "name": "keybindings",
+  "title": "Search keybindings",
+  "description": "Search file-backed shortcuts and detected AeroSpace bindings",
+  "icon": "icon.svg",
+  "author": "thijserven",
+  "license": "MIT",
+  "categories": [
+    "Documentation"
+  ],
+  "commands": [
+    {
+      "name": "browse",
+      "title": "Search keybindings",
+      "description": "Read shortcuts directly from configuration files",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "jsonPath",
+      "title": "Shortcuts JSON",
+      "description": "Absolute path or ~/ path. Empty disables this source.",
+      "type": "textfield",
+      "required": false,
+      "default": "~/.config/vicinae/keybindings.json"
+    },
+    {
+      "name": "sketchybarPath",
+      "title": "SketchyBar JSON",
+      "description": "Dynamic popup shortcuts. Missing file is normal; empty disables this source.",
+      "type": "textfield",
+      "required": false,
+      "default": "~/.cache/sketchybar/keybindings.json"
+    },
+    {
+      "name": "aerospacePath",
+      "title": "AeroSpace TOML",
+      "description": "Empty auto-detects deployed AeroSpace config; may point at repo source instead.",
+      "type": "textfield",
+      "required": false
+    },
+    {
+      "name": "detectAerospace",
+      "title": "Detect AeroSpace",
+      "description": "Include bindings from all AeroSpace modes.",
+      "label": "Read AeroSpace bindings",
+      "type": "checkbox",
+      "default": true,
+      "required": false
+    }
+  ],
+  "scripts": {
+    "build": "vici build --out dist && node tests/bundle.cjs",
+    "dev": "vici develop",
+    "test": "esbuild tests/data.test.ts --bundle --platform=node --format=cjs --outfile=dist/data.test.cjs && node --test dist/data.test.cjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vicinae/api": "0.29.2",
+    "smol-toml": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.12"
+  }
+}

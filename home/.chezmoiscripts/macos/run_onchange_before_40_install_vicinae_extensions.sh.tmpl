@@ -1,0 +1,6 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+# Extensions: {{ include "private_dot_config/vicinae/extensions.txt" | sha256sum }}
+{{ include "../install/macos/vicinae_extensions.sh" }}
+{{- end }}

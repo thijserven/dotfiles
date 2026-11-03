@@ -1,0 +1,9 @@
+[
+  {
+    "id": "sct_dotfiles",
+    "name": "dotfiles",
+    "icon": "icon://bundle//Applications/Visual%20Studio%20Code.app",
+    "url": "file:///Users/thijs/.local/share/chezmoi",
+    "app": "com.microsoft.VSCode"
+  }
+]

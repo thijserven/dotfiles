@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# launchd does not inherit interactive shell PATH; exec keeps Lua owned by SketchyBar.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+# CONFIG_DIR expands in the child shell after mise sets its working directory.
+# shellcheck disable=SC2016
+exec mise -C "${XDG_CONFIG_HOME:-$HOME/.config}/mise" exec -- sh -c '
+  cd "$CONFIG_DIR" || exit 1
+  exec lua "$CONFIG_DIR/init.lua"
+'

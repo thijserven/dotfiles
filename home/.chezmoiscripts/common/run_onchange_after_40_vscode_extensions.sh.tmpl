@@ -1,0 +1,4 @@
+#!/bin/bash
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+# Extensions: {{ include ".chezmoitemplates/vscode/extensions.txt" | sha256sum }}
+{{ include "../install/common/vscode_extensions.sh" }}

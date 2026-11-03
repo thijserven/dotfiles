@@ -1,0 +1,18 @@
+# Source .profile if it exists
+if [ -f ~/.profile ]; then
+    source ~/.profile
+fi
+
+{{- if eq .chezmoi.os "darwin" }}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+{{- end }}
+
+{{ if eq .chezmoi.os "darwin" -}}
+# OrbStack
+if brew list --cask orbstack >/dev/null 2>&1; then
+    source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+fi
+{{- end }}
+
+# Shims cover login-shell commands without interactive mise activation.
+export PATH="${MISE_DATA_DIR:-$HOME/.local/share/mise}/shims:$HOME/.local/bin:$PATH"

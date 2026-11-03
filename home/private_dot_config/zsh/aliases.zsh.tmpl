@@ -1,0 +1,59 @@
+# System
+alias shutdown='sudo shutdown now'
+alias reboot='sudo reboot'
+alias c='clear'
+alias e='exit'
+
+alias rr='source ~/.zshrc'
+alias cl='clear'
+
+# Folders
+alias doc="$HOME/Documents"
+alias dow="$HOME/Downloads"
+
+alias ff='fastfetch'
+
+# update all
+{{- if eq .chezmoi.os "darwin" }}
+alias sysup='brew upgrade; mas upgrade; omz update'
+alias buc='brew upgrade --cask'
+{{- else if eq .chezmoi.os "linux" }}
+{{-   if eq .chezmoi.osRelease.id "arch" }}
+alias sysup='sudo pacman -Syu; omz update'
+{{-   else }}
+alias sysup='sudo apt update && sudo apt upgrade -y; omz update'
+{{-   end }}
+{{- end }}
+
+# create a new private repo on GitHub and push the current directory to it
+alias gh-create='gh repo create --private --source=. --remote=origin && git push -u --all && gh browse'
+
+# ---- EZA (better ls) ----
+alias ls='eza --color=always --icons=always --long --header --git --time-style=relative --group-directories-first'
+alias lt="eza --tree --level=2 --long --icons --git"
+alias ltree="eza --tree --level=2  --icons --git"
+
+# ---- Zoxide (better cd) ----
+alias cd=z
+
+# FZF history search
+alias fh='fc -l 1 | tac | fzf --no-sort --border'
+
+# OpenCode
+alias opc="opencode"
+
+# Chezmoi
+alias cm="chezmoi"
+
+{{ if eq .chezmoi.os "darwin" -}}
+# open quicklook
+alias ql='qlmanage -p'
+
+# sketchybar
+alias sb='sketchybar'
+alias sbr='sketchybar --reload'
+
+# aerospace
+alias as='aerospace'
+alias asr='aerospace reload-config'
+{{- end }}

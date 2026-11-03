@@ -1,0 +1,16 @@
+zsh
+eza
+bat
+fd-find
+ripgrep
+git
+neovim
+jq
+tmux
+age
+gnupg
+curl
+wget
+rsync
+tree
+btop

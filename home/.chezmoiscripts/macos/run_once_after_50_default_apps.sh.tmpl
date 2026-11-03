@@ -1,0 +1,4 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+{{ include "../install/macos/default_apps.sh" }}
+{{- end }}

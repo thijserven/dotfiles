@@ -1,0 +1,31 @@
+# macOS metadata
+.DS_Store
+**/.DS_Store
+**/dot_DS_Store
+
+# chezmoi age key (never commit)
+key.txt
+
+# yazi backup files
+private_dot_config/yazi/yazi.toml-*
+
+# Repository documentation, never deployed (root and nested directories)
+README.md
+**/README.md
+
+# Bootstrap input only, embedded in Vicinae installer, not deployed
+.config/vicinae/extensions
+.config/vicinae/extensions.txt
+
+# Ignore configuration files that are not relevant for the selected OS
+{{ if eq .chezmoi.os "darwin" }}
+.config/Code
+{{ else if eq .chezmoi.os "linux" }}
+.config/aerospace
+.config/sketchybar
+.hammerspoon
+.config/vicinae
+.local/share/vicinae
+Library/Application Support
+Library/LaunchAgents
+{{ end }}

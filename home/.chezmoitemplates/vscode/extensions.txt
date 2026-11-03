@@ -1,0 +1,32 @@
+# Appearance
+catppuccin.catppuccin-vsc
+zhuangtongfa.Material-theme
+kisstkondoros.vscode-gutter-preview
+miguelsolorio.fluent-icons
+miguelsolorio.symbols
+PKief.material-icon-theme
+
+# Development
+aaron-bond.better-comments
+BriteSnow.vscode-toggle-quotes
+dbaeumer.vscode-eslint
+eamodio.gitlens
+esbenp.prettier-vscode
+formulahendry.auto-rename-tag
+pranaygp.vscode-css-peek
+stivo.tailwind-fold
+wix.vscode-import-cost
+
+# Languages
+bradlc.vscode-tailwindcss
+Lokalise.i18n-ally
+ms-vscode.makefile-tools
+redhat.vscode-yaml
+sharat.vscode-brewfile
+tamasfe.even-better-toml
+
+# Utilities
+EditorConfig.EditorConfig
+romantomjak.go-template
+usernamehw.errorlens
+yoavbls.pretty-ts-errors

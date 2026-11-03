@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Show keybindings",
+    "keys": "hyper + K",
+    "category": "Vicinae - Commands",
+    "tags": ["vicinae"]
+  },
+  {
+    "title": "Toggle Vicinae",
+    "keys": "cmd + space",
+    "category": "Vicinae - Global",
+    "tags": ["vicinae"]
+  },
+  {
+    "title": "Open fzf while in terminal",
+    "keys": "ctrl + T",
+    "category": "Terminal - fzf",
+    "tags": ["terminal"]
+  }
+]

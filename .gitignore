@@ -1,0 +1,6 @@
+# Local age identities must never be committed
+key.txt
+
+# Local Python environments and bytecode
+.venv/
+__pycache__/

@@ -1,0 +1,7 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Package list: {{ include "../install/macos/packages.txt" | sha256sum }}
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+{{ include "../install/macos/packages.sh" }}
+{{ include "../install/common/zsh.sh" }}
+{{- end }}

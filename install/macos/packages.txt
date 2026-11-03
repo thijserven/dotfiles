@@ -1,0 +1,66 @@
+# Shell & prompt
+brew "starship"
+brew "thefuck"
+brew "zoxide"
+brew "zsh"
+
+# Shell history
+brew "fzf"
+
+# File tools
+brew "duf"
+brew "eza"
+brew "ripgrep"
+brew "trash"
+
+# Dev tools
+brew "curl"
+brew "direnv"
+brew "gh"
+brew "git"
+brew "jq"
+brew "mise"
+brew "opencode"
+brew "rsync"
+brew "teamookla/speedtest/speedtest", trusted: true
+brew "wget"
+
+# Security & secrets
+brew "age"
+brew "bitwarden-cli"
+brew "detect-secrets"
+brew "sops"
+
+# chezmoi (bootstraps itself on next machine)
+brew "chezmoi"
+
+# Infra / cloud
+brew "ansible"
+brew "opentofu"
+
+# Misc CLI
+brew "fastfetch"
+brew "jackchuka/tap/dutix", trusted: true
+
+# Window management
+brew "felixkratz/formulae/borders", trusted: true
+brew "felixkratz/formulae/sketchybar", trusted: true
+brew "smudge/smudge/nightlight", trusted: true
+brew "switchaudio-osx"
+brew "lotyp/formulae/dockutil", trusted: true
+
+# Fonts
+cask "font-hack-nerd-font"
+cask "font-sketchybar-app-font"
+cask "sf-symbols"
+
+# Apps (casks)
+cask "nikitabobko/tap/aerospace", trusted: true
+cask "cmux"
+cask "firefox"
+cask "hammerspoon"
+cask "localsend"
+cask "orbstack"
+cask "spotify"
+cask "stats"
+cask "visual-studio-code"
