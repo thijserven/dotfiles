@@ -26,6 +26,10 @@ start_apps() {
       launchctl bootstrap "$domain" "$agent"
     fi
   done
+
+  # Unlike the apps above, OrbStack should only be started once after bootstrap so
+  # it can initialize docker.
+  open -a OrbStack
 }
 
 main() {
