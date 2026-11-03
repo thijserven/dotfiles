@@ -4,18 +4,18 @@
 
 ## Directory guide
 
-| Path                                                               | Responsibility                                                  |
-| ------------------------------------------------------------------ | --------------------------------------------------------------- |
-| [`.chezmoi.toml.tmpl`](.chezmoi.toml.tmpl)                         | Init prompts, age settings, and pre-read bootstrap hook         |
-| [`.chezmoiignore`](.chezmoiignore)                                 | Platform exclusions and recursive `README.md` exclusion         |
-| [`.chezmoiexternal.toml.tmpl`](.chezmoiexternal.toml.tmpl)         | Pinned, checksum-verified SketchyBar icon map download on macOS |
+| Path                                                               | Responsibility                                                               |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [`.chezmoi.toml.tmpl`](.chezmoi.toml.tmpl)                         | Init prompts, age settings, and pre-read bootstrap hook                      |
+| [`.chezmoiignore`](.chezmoiignore)                                 | Platform exclusions and recursive `README.md` exclusion                      |
+| [`.chezmoiexternal.toml.tmpl`](.chezmoiexternal.toml.tmpl)         | Pinned, checksum-verified SketchyBar icon map download on macOS              |
 | [`.chezmoiscripts/`](.chezmoiscripts/.README.md)                   | Conditional wrappers for shell scripts in [`install/`](../install/README.md) |
-| [`.chezmoitemplates/`](.chezmoitemplates/README.md)                | Shared VS Code templates                                        |
-| [`private_dot_config/`](private_dot_config/README.md)              | Configuration deployed to `~/.config/`                          |
-| [`dot_hammerspoon/`](dot_hammerspoon/README.md)                    | macOS automation deployed to `~/.hammerspoon/`                  |
-| [`Library/`](Library/README.md)                                    | macOS application configuration                                 |
-| [`private_dot_ssh/`](private_dot_ssh/README.md)                    | Encrypted SSH configuration and keys                            |
-| [`dot_zshrc`](dot_zshrc), [`dot_zprofile.tmpl`](dot_zprofile.tmpl) | [Zsh entry points](private_dot_config/zsh/README.md)            |
+| [`.chezmoitemplates/`](.chezmoitemplates/README.md)                | Shared VS Code templates                                                     |
+| [`private_dot_config/`](private_dot_config/README.md)              | Configuration deployed to `~/.config/`                                       |
+| [`dot_hammerspoon/`](dot_hammerspoon/README.md)                    | macOS automation deployed to `~/.hammerspoon/`                               |
+| [`Library/`](Library/README.md)                                    | macOS application configuration                                              |
+| [`private_dot_ssh/`](private_dot_ssh/README.md)                    | Encrypted SSH configuration and keys                                         |
+| [`dot_zshrc`](dot_zshrc), [`dot_zprofile.tmpl`](dot_zprofile.tmpl) | [Zsh entry points](private_dot_config/zsh/README.md)                         |
 
 ## Prerequisites
 
@@ -57,7 +57,11 @@ test -f ~/.ssh/config
 gh auth login
 ```
 
-Log out and back in for default-shell and some macOS settings changes. Set Cmux's default terminal through Settings > General > Default Terminal manually.
+macOS may show many permission and default-app popups during bootstrap and installation as apps open. Follow each prompt and grant requested permissions. For default-app prompts, choose the button containing **Use: XXX**, not **Keep: XXX**.
+
+Follow the dialogs you see appear on screen and give the permissions the dialogs ask for. If permissions are granted but behavior remains broken, log out and log back in.
+
+Set Cmux's default terminal through Settings > General > Default Terminal manually.
 
 Optional SSH remote, from the repository checkout:
 
@@ -116,7 +120,7 @@ Platform branching belongs in templates, not runtime shell modules:
 | `.chezmoi.sourceDir`                 | Source state directory, normally `~/.local/share/chezmoi/home` |
 | `.chezmoi.workingTree`               | Repository root; use for `install/` and `scripts/`             |
 | `.chezmoi.homeDir`                   | Target home directory                                          |
-| `.email`, `.name`                   | Saved Git identity                                             |
+| `.email`, `.name`                    | Saved Git identity                                             |
 | `.bitwardenServer`, `.bitwardenNote` | Vault URL and secure-note name                                 |
 
 ## Troubleshooting

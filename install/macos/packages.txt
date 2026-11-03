@@ -11,7 +11,6 @@ brew "fzf"
 brew "duf"
 brew "eza"
 brew "ripgrep"
-brew "trash"
 
 # Dev tools
 brew "curl"
@@ -63,4 +62,5 @@ cask "localsend"
 cask "orbstack"
 cask "spotify"
 cask "stats"
+cask "vicinae"
 cask "visual-studio-code"

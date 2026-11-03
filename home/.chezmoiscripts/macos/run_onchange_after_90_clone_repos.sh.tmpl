@@ -1,0 +1,5 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+export DOTFILES_ROOT={{ .chezmoi.workingTree | quote }}
+{{ include "../install/macos/repos.sh" }}
+{{- end }}

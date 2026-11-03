@@ -1,5 +1,5 @@
-{{- $email := promptStringOnce . "email" "Email address" -}}
-{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $email := promptStringOnce . "email" "GitHub user email address" -}}
+{{- $name := promptStringOnce . "name" "GitHub user full name" -}}
 {{- $bitwardenServer := promptStringOnce . "bitwardenServer" "Bitwarden server URL" "https://vault.bitwarden.com" -}}
 
 encryption = "age"
