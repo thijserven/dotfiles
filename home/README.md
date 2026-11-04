@@ -59,7 +59,17 @@ gh auth login
 
 macOS may show many permission and default-app popups during bootstrap and installation as apps open. Follow each prompt and grant requested permissions. For default-app prompts, choose the button containing **Use: XXX**, not **Keep: XXX**.
 
-Follow the dialogs you see appear on screen and give the permissions the dialogs ask for. If permissions are granted but behavior remains broken, log out and log back in.
+Grant the required macOS permissions in **System Settings > Privacy & Security**. Enable **Accessibility** for AeroSpace, Hammerspoon, and Vicinae; enable **Full Disk Access** for Vicinae. Screenshots show required entries:
+
+**Accessibility**
+
+![Accessibility permissions for AeroSpace, Hammerspoon, and Vicinae](../assets/macos-accessibility-permissions.png)
+
+**Full Disk Access**
+
+![Full Disk Access for Vicinae](../assets/macos-full-disk-access-permissions.png)
+
+If permissions are granted but behavior remains broken, log out and log back in.
 
 Set Cmux's default terminal through Settings > General > Default Terminal manually.
 
