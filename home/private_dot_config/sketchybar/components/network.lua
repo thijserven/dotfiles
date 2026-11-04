@@ -1,10 +1,9 @@
 local format = require("services.network")
 
 return function(sbar, theme)
-  local network = sbar.add("item", "network", {
-    position = "right", update_freq = 3,
-    icon = { drawing = true, string = utf8.char(0xf092e), font = "Hack Nerd Font:Regular:18.0" },
-    label = { drawing = false },
+  local network = require("ui.status_icon")(sbar, "network", {
+    update_freq = 3,
+    icon = { string = utf8.char(0xf092e) },
   })
   local popup = require("ui.popup")(sbar, theme, network, "network")
   popup.defer_open = true

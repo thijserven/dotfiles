@@ -7,10 +7,11 @@ macOS automation deployed to `~/.hammerspoon/`; excluded on Linux. [`init.lua`](
 | File                                                     | Responsibility                                                                                                |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | [`caps_lock.lua`](caps_lock.lua)                         | Map Caps Lock to F18 through `hidutil`, preserving other mappings                                             |
-| [`hyperkey.lua`](hyperkey.lua)                           | Tap Caps Lock for Escape; hold for Hyper (`cmd+alt+ctrl+shift`); reapply mapping after wake or USB attachment |
+| [`hyperkey.lua`](hyperkey.lua)                           | Hold Caps Lock for Hyper (`cmd+alt+ctrl+shift`); tapping sends no key; reapply mapping after wake or USB attachment |
 | [`sketchybar_menu_guard.lua`](sketchybar_menu_guard.lua) | Keep cursor outside native menu-bar reveal zone; Option bypasses guard |
 | [`sketchybar_audio_keys.lua`](sketchybar_audio_keys.lua) | Enable popup hotkeys from published visibility and process liveness; retain polling timers |
 | [`audio_controls.lua`](audio_controls.lua) | Coalesce deferred CoreAudio changes and manage held-volume-key repeat |
+| [`brightness_controls.lua`](brightness_controls.lua) | Serialize brightness CLI writes, repeat popup keys, and sample selected brightness slider during drags |
 | [`sketchybar_slider_preview.lua`](sketchybar_slider_preview.lua) | Query dragged volume slider and preview its percentage label |
 | [`sketchybar.lua`](sketchybar.lua) | Send shared SketchyBar events and retain tasks until completion |
 
@@ -32,6 +33,34 @@ about 13 steps/second; the latest held direction wins. Mute publishes switch sta
 mute ignores repeats. Popup keyboard controls use native `hs.hotkey` bindings;
 timestamp age never disables an open popup. A two-second process check disables
 bindings if SketchyBar exits. Closed popups leave normal typing unchanged.
+
+Brightness popup captures `-`, `=` and Shift+`=` for built-in display brightness
+only while `brightness-popup` lease is open. `[` and `]` control keyboard
+backlight while its availability lease is open. Controls change manual levels,
+including when macOS auto brightness is enabled; native automatic settings remain
+untouched, and macOS may adjust brightness again later.
+Steps are 5 points, with a 300 ms initial delay and 75 ms repeat interval; latest
+held direction wins. Brightness takes keyboard precedence over audio when both
+popups are open. Slider sampling runs every 25 ms and checks mouse-down geometry
+so only the selected slider changes. Component release calls
+`require("brightness_controls").commit(target, percentage, sequence)` through Hammerspoon's
+bundled `hs` CLI, covering short clicks and invalidating stale preview callbacks.
+All writes use one serialized, coalescing queue for Homebrew `brightness` and
+`rakalex/mac-brightnessctl/mac-brightnessctl`; no separate component setter is used.
+Display writes target the online built-in display's explicit ID; keyboard controls
+require detected backlight hardware and a valid CLI reading. Key sequences refresh
+status before applying their first delta. Display slider selection and release
+commits require the popup lease; keyboard controls also require availability.
+`brightness_state` publishes acknowledged `DISPLAY`/`KEYBOARD` values,
+`ERROR=true/false`, and `DRAGGING=true` while drag or key writes are pending.
+Upstream keyboard setter reports requested values without verifying hardware success.
+`INPUT=pointer` (also `POINTER=true`) marks labels-only events throughout pointer
+interaction, release writes, and final `DRAGGING=false` acknowledgement; these events
+must never set slider percentages. Other sources are `keyboard` and `refresh`.
+Components defer status rendering until `DRAGGING=false`. Release waits for component
+commit before settling, with a one-second fallback for releases outside the slider.
+Delayed commits are rejected while a newer mouse gesture is held. Brightness CLIs
+come from the Homebrew package lifecycle; unsupported devices report no value.
 
 ## Changes and startup
 

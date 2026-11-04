@@ -1,10 +1,8 @@
 return function(sbar, theme)
   local system = require("services.system")
-  local owner = sbar.add("item", "system", {
-    position = "right",
+  local owner = require("ui.status_icon")(sbar, "system", {
     update_freq = 10,
-    icon = { drawing = true, string = utf8.char(0xf4bc), font = "Hack Nerd Font:Regular:18.0" },
-    label = { string = "—", padding_left = 0 },
+    icon = { string = utf8.char(0xf4bc) },
   })
   local popup = require("ui.popup")(sbar, theme, owner, "system")
   popup.spacer("top", popup.top_padding)
@@ -33,16 +31,13 @@ return function(sbar, theme)
       busy = false
       local data = code == 0 and system.parse(result)
       if not data then
-        owner:set({ label = { string = "—" }, icon = { color = theme.text } })
+        owner:set({ icon = { color = theme.text } })
         for _, row in pairs(rows) do row:set({ label = { string = "Unavailable" } }) end
         return
       end
 
       local ram = data.used / data.total * 100
-      owner:set({
-        label = { string = string.format("C %.0f%% M %.0f%%", data.cpu, ram) },
-        icon = { color = math.max(data.cpu, ram) >= 85 and theme.primary or theme.text },
-      })
+      owner:set({ label = { string = "" }, icon = { color = theme.text } })
       local values = {
         cpu = string.format("%.1f%%", data.cpu),
         ram = string.format("%.1f / %.1f GiB", data.used / 2^30, data.total / 2^30),

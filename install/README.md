@@ -12,6 +12,10 @@ Package lists live in [`macos/packages.txt`](macos/packages.txt), [`linux/packag
 
 [`bootstrap_age_key.sh`](common/bootstrap_age_key.sh) restores the age identity from Bitwarden before encrypted files are read. It runs through `hooks.read-source-state.pre` in [`home/.chezmoi.toml.tmpl`](../home/.chezmoi.toml.tmpl), not as a `run_once_*` script: those run too late for decryption.
 
+## Brightness commands
+
+Homebrew package list installs `brightness` from HEAD for Apple Silicon-compatible display brightness and `rakalex/mac-brightnessctl/mac-brightnessctl` for keyboard backlight. [SketchyBar brightness controls](../home/private_dot_config/sketchybar/README.md#brightness) use these CLIs directly through Hammerspoon, without a custom native build. Manual writes leave native auto-brightness settings unchanged. Read-only checks use `brightness -l` and `mac-brightnessctl`; set commands change live hardware.
+
 ## Identity recovery
 
 The hook receives the vault URL, secure-note name, identity path, public recipient, and chezmoi executable from generated configuration.

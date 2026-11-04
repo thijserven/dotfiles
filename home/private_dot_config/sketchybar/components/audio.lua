@@ -6,11 +6,9 @@ local function percentage(value)
 end
 
 return function(sbar, theme)
-  local volume = sbar.add("item", "volume", {
-    position = "right",
+  local volume = require("ui.status_icon")(sbar, "volume", {
     update_freq = 5,
-    icon = { drawing = true, string = "􀊩" },
-    label = { drawing = false },
+    icon = { string = "􀊩", font = "SF Pro:Regular:16.0" },
   })
   local popup = require("ui.popup")(sbar, theme, volume, "volume")
   popup.defer_open = true

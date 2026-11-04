@@ -82,7 +82,7 @@ return function(sbar, theme)
 
   local function add_workspace(name)
     local item = sbar.add("item", "space." .. name, {
-      position = "left", label = name, drawing = not service_active,
+      position = "left", label = { string = name, font = "Hack Nerd Font:Bold:13.0" }, drawing = not service_active,
     })
     item:subscribe("mouse.clicked", function()
       sbar.exec("aerospace workspace " .. aerospace.quote(name))
