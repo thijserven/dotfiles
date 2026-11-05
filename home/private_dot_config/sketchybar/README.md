@@ -96,11 +96,14 @@ text color; speedometer uses pink accent only while test runs.
 “Open Wifi Settings” opens macOS Wi-Fi settings. Click again or leave popup to close.
 
 Click speedometer in popup header to run installed Ookla CLI:
-`speedtest --accept-license --accept-gdpr --format=json --progress=no`.
+`speedtest --accept-license --accept-gdpr --format=json --progress=yes --progress-update-interval=1000`.
 These flags accept Ookla's license and privacy terms without first-run
-prompts. Test uses internet traffic and shows download/upload bandwidth, ping and
-packet loss on completion. Click speedometer again to cancel only this popup's
-speedtest process; icon returns to normal text color and late results are ignored.
+prompts. Test uses internet traffic and updates download/upload bandwidth once
+per second during each phase. Download shows “Preparing…” until measurements
+arrive; upload shows “Waiting…” until its phase starts. Final download/upload
+bandwidth, ping and packet loss appear on completion. Click speedometer again to
+cancel only this popup's speedtest process; icon returns to normal text color and
+late results are ignored.
 Next test can start once cancelled process exits.
 While network popup is open, press `t` to start/cancel using the same control.
 Holding `t` ignores autorepeat; closed popup leaves typing unchanged.
