@@ -4,7 +4,7 @@
 
 My Omarchy-inspired personal dotfiles managed with [chezmoi](https://chezmoi.io). Primarily focussed on MacOS, Linux support targets Debian/Ubuntu and Arch. Templates handle platform differences, age protects secrets, with identity recovery from Bitwarden before encrypted files are read.
 
-chezmoi copies rendered files into `$HOME`, not symlinks. [home/](home/README.md) is the source state; repository tooling, package definitions, assets, and documentation stay outside deployment. All `README.md` files are excluded by [`.chezmoiignore`](home/.chezmoiignore).
+chezmoi copies rendered files into `$HOME`. [home/](home/README.md) is the source state.
 
 ## Getting started
 
@@ -13,8 +13,6 @@ Fresh Apple Silicon Mac: finish macOS Setup Assistant, connect to the internet, 
 ```sh
 /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/thijserven/dotfiles/main/setup.sh)"
 ```
-
-No preinstalled Git, Homebrew, chezmoi, or Xcode Command Line Tools required.
 
 This downloads and runs [`setup.sh`](setup.sh), which installs missing Rosetta, Homebrew, and chezmoi, then applies these personal dotfiles to your home directory and changes macOS settings. Review the repository first. After macOS Setup Assistant, open Terminal as your normal administrator account; do not run with `sudo`. Requires internet and the Bitwarden identity backup described in [prerequisites](home/README.md#prerequisites). Rosetta installation automatically accepts Apple's Rosetta license and may prompt for your administrator password. Homebrew installs missing Command Line Tools before chezmoi clones the repository. Password, installation confirmations, setup values, and Bitwarden authentication remain interactive; approve any Command Line Tools dialog and wait for installation to finish before continuing. macOS privacy permissions, app sign-ins, and [finish-setup steps](home/README.md#verify-and-finish-setup) still require manual action. This is one-command bootstrap, not unattended setup.
 
@@ -38,4 +36,4 @@ Follow [setup and daily usage](home/README.md) for prerequisites, bootstrap comm
 
 [The macOS package script](install/macos/packages.sh) installs packages and casks listed in [packages.txt](install/macos/packages.txt) through Homebrew Bundle. Linux package lists and upstream installers live in [the package script](install/linux/packages.sh); Homebrew is not installed on Linux. Package scripts do not continuously reconcile installed software: review changes before rerunning them.
 
-Personal configuration; use as inspiration rather than applying blindly to an existing machine.
+Note that this is my personal configuration, use as inspiration rather than applying blindly to an existing machine.
