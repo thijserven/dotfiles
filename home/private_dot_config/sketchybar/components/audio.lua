@@ -22,7 +22,7 @@ return function(sbar, theme)
 
   local toggle_mute
   local mute_available = true
-  local title = popup.header("title", popup.title(utf8.char(0xf028), "Audio"), 240, {
+  local title = popup.header("title", popup.title("􀊩", "Audio"), 240, {
     icon = "",
     width = 38,
     on_click = function() toggle_mute() end,
@@ -64,7 +64,7 @@ return function(sbar, theme)
     level = number
     local icon = level == 0 and "􀊣" or "􀊩"
     volume:set({ icon = icon })
-    title:set({ icon = { string = popup.title(utf8.char(level == 0 and 0xf026 or 0xf028), "Audio") } })
+    title:set({ icon = { string = popup.title(icon, "Audio") } })
     slider:set({ slider = { percentage = level }, label = level .. "%" })
   end
 

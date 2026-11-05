@@ -72,6 +72,7 @@ return function(sbar, theme, owner, prefix)
     properties.icon = {
       drawing = true,
       string = left,
+      color = theme.muted,
       font = popup.fonts.body,
       width = left_width,
       align = "left",
@@ -100,6 +101,7 @@ return function(sbar, theme, owner, prefix)
 
     heading:set({
       icon = {
+        color = theme.text,
         font = { family = "Hack Nerd Font", style = "Bold", size = 16.0, typographical_width = true },
       },
       label = { drawing = action ~= nil, font = popup.fonts.title, color = theme.text },

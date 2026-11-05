@@ -4,6 +4,9 @@ return {
   surface = 0xff494d64,
   text = 0xffcad3f5,
   muted = 0xff939ab7,
+  success = 0xffa6da95,
+  warning = 0xfff5a97f,
+  error = 0xffed8796,
   primary = 0xffc6a0f6, -- Shared active/highlight color.
 
   popup = {

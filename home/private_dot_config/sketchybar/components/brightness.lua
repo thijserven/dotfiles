@@ -22,6 +22,7 @@ return function(sbar, theme)
   local dragging = false
   local revision = 0
   local commit_sequence = os.time() * 1000000
+  local pending_commit
 
   local function publish_keyboard_state()
     state.publish(keyboard_state_path, popup.opened and keyboard_available)
@@ -63,10 +64,13 @@ return function(sbar, theme)
       if not value or not available or target == "keyboard" and not keyboard_available then return end
       revision = revision + 1
       commit_sequence = commit_sequence + 1
+      local sequence = commit_sequence
+      pending_commit, dragging = sequence, true
+      slider:set({ label = value .. "%" })
       local command = string.format('require("brightness_controls").commit("%s", %d, %.0f)', target, value, commit_sequence)
       sbar.exec("/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs -c '" .. command .. "'", function(_, code)
-        if code ~= 0 then
-          dragging = false
+        if code ~= 0 and pending_commit == sequence then
+          pending_commit, dragging = nil, false
           error_row:set({ drawing = true, label = "Hammerspoon control unavailable" })
         end
       end)
@@ -151,6 +155,11 @@ return function(sbar, theme)
 
   sbar.add("event", "brightness_state")
   brightness:subscribe("brightness_state", function(env)
+    -- Older acknowledgements must not unlock refresh after a release.
+    if pending_commit then
+      if tonumber(env.COMMIT) ~= pending_commit then return end
+      if env.DRAGGING == "false" then pending_commit = nil end
+    end
     revision = revision + 1
     if env.DRAGGING then dragging = env.DRAGGING == "true" end
     local display, keyboard = percentage(env.DISPLAY), percentage(env.KEYBOARD)

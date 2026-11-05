@@ -5,8 +5,9 @@ Configuration lives in `init.lua`; palette and shared popup styles live in
 shares row padding, spacers, separators and mouse open/close handling between
 network and volume. New popups use
 `require("ui.popup")(sbar, theme, owner, "feature")`, then assign `on_open`/`on_close`
-callbacks when needed. `popup.columns` creates shared left-label/right-value rows;
-feature-specific widths and controls stay in `components/`.
+callbacks when needed. `popup.columns` creates shared left-label/right-value rows with muted field labels;
+titles and values keep normal text colors, with accents for active controls.
+Feature-specific widths and controls stay in `components/`.
 `ui/status_icon.lua` gives battery, brightness, volume, network, coffee and system
 icons shared 36-pixel item and icon widths, centered glyphs, zero internal icon
 padding and hidden labels. Battery uses balanced -3/+3 icon padding for optical
@@ -26,9 +27,10 @@ text and clicks. `coffee.lua` owns keep-awake commands and state. Right-side ord
 (left to right) is system load, coffee, network, volume, brightness, battery and clock.
 `ui/shortcuts.lua` reverses popup registration order to match right-side rendering:
 Hyper+1 opens system load, Hyper+2 toggles caffeinate, Hyper+3 opens network,
-Hyper+4 opens volume, Hyper+5 opens brightness, Hyper+6 opens Battery settings,
+Hyper+4 opens volume, Hyper+5 opens brightness, Hyper+6 toggles battery popup,
 and Hyper+7 opens macOS Clock.
-Battery click opens Battery settings. Clock click and `clock` shortcut open Google Calendar in the default browser; clock displays `Friday Oct 30 17:37`.
+Battery click toggles popup showing exact battery percentage with muted “Charge” label
+(or “Charging” while actively charging). Clicking popup title opens Battery settings. Clock click and `clock` shortcut open Google Calendar in the default browser; clock displays `Friday Oct 30 17:37`.
 Moving components in `init.lua` automatically renumbers
 registered actions; passive items consume no slots. Contextual AeroSpace service help keeps its own bindings.
 Hammerspoon dispatches Hyper+1–9 and Hyper+0 (slot 10) through `popup_toggle`.
@@ -160,8 +162,9 @@ of pending values. Popup rows and hints use fixed widths. Closed popups leave ty
 unchanged. Reload Hammerspoon after deployment; its Accessibility permission is
 required. Release commits use Hammerspoon's bundled IPC CLI at
 `/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs`; `init.lua` loads `hs.ipc`.
-Sequenced commits reject stale releases. Pointer acknowledgements update labels
-without moving slider knobs, avoiding drag jitter.
+Sequenced commits reject stale releases. Hardware refresh stays paused from release
+until its matching commit settles; older acknowledgements cannot unlock refresh.
+Pointer acknowledgements update labels without moving slider knobs, avoiding drag jitter.
 
 Homebrew installs [`brightness`](https://formulae.brew.sh/formula/brightness) from HEAD
 for Apple Silicon DisplayServices support, and
@@ -193,13 +196,34 @@ sleeping Mac still overrides idle-sleep prevention.
 
 ## System load
 
-System chip shows CPU and RAM percentages; click or **Hyper+1** opens details.
-Native `top`, `vm_stat`, `sysctl` and `memory_pressure -Q` refresh every ten seconds,
+System icon click or **Hyper+1** opens CPU, RAM and disk usage percentages, plus
+used/total RAM and disk space in GiB. CPU temperature appears below CPU usage in °C.
+Homebrew `macmon` supplies average CPU temperature on Apple Silicon without sudo,
+using private macOS sensor APIs; missing tools or invalid readings show `Unavailable`.
+Clicking popup title opens Activity Monitor.
+Native `top`, `vm_stat`, `sysctl`, `df` and `ps` refresh every ten seconds,
 on wake and on opening. CPU uses the second one-second sample, not boot averages.
 RAM used is active + wired + compressor pages; excludes reclaimable inactive pages.
-Popup shows used/total RAM, compressed RAM, memory available from macOS pressure
-accounting, swap used and 1/5/15-minute load averages (not CPU percentages).
-Failed reads show unavailable values. No background network requests.
+Disk usage shows read/write throughput in MiB/s from native `ioreg` byte counters,
+averaged between refreshes across physical disks. First sample, counter resets or
+device changes show `—` until another sample. Throughput stays text-colored; it does
+not measure disk saturation. Disk used shows used percentage; Disk used / total
+shows GiB. Storage stats use `/System/Volumes/Data`; used space is capacity minus
+available space, including other volumes sharing the APFS container.
+Below separator, three apps show combined process CPU percentages and resident RAM
+in GiB, ranked by CPU with RAM breaking ties. Processes inside the same outermost
+`.app` bundle are grouped; standalone processes are excluded. Process CPU readings
+come from `ps` and can exceed 100% across cores; resident RAM can count shared pages
+more than once. Failed reads show unavailable values. No background network requests.
+Values use default theme text color below warning thresholds, then warning/error colors.
+CPU and RAM warn at 70%, error at 90%;
+disk warns at 80%, errors at 90%; CPU temperature warns at 80°C, errors at 95°C.
+Used/total rows share their usage percentage color. App rows use the worse of CPU
+percentage (100% per core) and resident RAM as a percentage of total RAM, with
+70%/90% thresholds. Missing values stay muted. Colors indicate thresholds, not
+hardware-specific thermal limits or macOS memory-pressure assessments.
+Main bar icon uses the highest severity across CPU usage, CPU temperature and RAM;
+disk and per-app rows do not affect it. Normal or failed overall reads use text color.
 
 ## Installation and updates
 

@@ -1,0 +1,1 @@
+- Refactor sketchybar's `.lua` code so re-uable components and cleaner code is used.

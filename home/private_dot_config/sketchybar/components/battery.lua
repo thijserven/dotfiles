@@ -1,9 +1,15 @@
-return function(sbar)
+return function(sbar, theme)
   local battery = require("ui.status_icon")(sbar, "battery", {
     update_freq = 60, drawing = false,
-    -- Optical inset brings narrow battery glyph closer to brightness.
-    icon = { string = "󰁹", padding_left = -3, padding_right = 3 },
+    icon = { string = "󰁹" },
   })
+
+  local popup = require("ui.popup")(sbar, theme, battery, "battery")
+  popup.spacer("top", popup.top_padding)
+  local title = popup.header("title", popup.title("󰁹", "Battery"), 240)
+  popup.spacer("header", 9)
+  local percentage = popup.columns("percentage", "Charge", "—", 150, 90)
+  popup.spacer("bottom")
 
   local function receive_battery(result, code)
     if code ~= 0 or type(result) ~= "string" then return end
@@ -23,6 +29,11 @@ return function(sbar)
       drawing = percent ~= nil,
       icon = { string = icon },
     })
+    title:set({ icon = { string = popup.title(icon, "Battery") } })
+    percentage:set({
+      icon = { string = result:match(";%s*charging;") and "Charging" or "Charge" },
+      label = { string = percent and (percent .. "%") or "—" },
+    })
   end
 
   local function refresh_battery()
@@ -30,11 +41,12 @@ return function(sbar)
   end
 
   local function open_battery()
+    popup.close()
     sbar.exec("open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'")
   end
 
-  require("ui.shortcuts").register("battery", { toggle = open_battery, title = "Open Battery settings" }, battery)
+  popup.on_open = refresh_battery
+  title:subscribe("mouse.clicked", open_battery)
   battery:subscribe({ "routine", "forced", "power_source_change", "system_woke" }, refresh_battery)
-  battery:subscribe("mouse.clicked", open_battery)
   refresh_battery()
 end

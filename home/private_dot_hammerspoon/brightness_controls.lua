@@ -14,6 +14,7 @@ local dragging, finishing = false, false
 local input, awaiting_commit = "refresh", false
 local enabled, keyboard_enabled = false, false
 local generation, selected, down = 0, nil, nil
+local last_commit = 0
 local query_task, commit_timer
 local refresh_needed = false
 
@@ -41,6 +42,7 @@ local function publish(failed, levels)
     "DRAGGING=" .. tostring(dragging),
     "POINTER=" .. tostring(input == "pointer"),
     "INPUT=" .. input,
+    "COMMIT=" .. string.format("%.0f", last_commit),
   }
   for _, target in ipairs({ "display", "keyboard" }) do
     if levels ~= false and values[target] ~= nil then
@@ -207,18 +209,16 @@ local function finish_drag()
   end
 end
 
-local last_commit = 0
-
 function brightness.commit(target, value, sequence)
   sequence = tonumber(sequence)
   if not sequence or sequence ~= sequence or sequence > 9007199254740991
     or sequence <= last_commit or sequence % 1 ~= 0 then return false end
-  last_commit = sequence
   value = percentage(value)
   if (target ~= "display" and target ~= "keyboard") or not value then return false end
   if target == "display" and not enabled then return false end
   -- A delayed release must not cancel a newer pointer gesture.
   if down and hs.eventtap.checkMouseButtons().left then return false end
+  last_commit = sequence
   -- A release command supersedes all in-flight slider queries, never CLI writes.
   generation = generation + 1
   selected, down = nil, nil

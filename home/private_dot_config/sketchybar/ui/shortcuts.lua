@@ -44,9 +44,8 @@ function shortcuts.start(sbar)
           string = slot == 10 and "0" or tostring(slot),
           font = "Hack Nerd Font:Bold:9.0",
           align = "right",
-          -- Balanced padding keeps number visible and properly positioned.
-          padding_left = 8,
-          padding_right = 2,
+          padding_left = 0,
+          padding_right = 0,
         },
       })
       -- Zero-width item overlays owner's lower-right edge without shifting layout.
