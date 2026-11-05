@@ -38,25 +38,13 @@ return function(sbar, theme)
   local title = popup.header("title", popup.title(utf8.char(0xf185), "Brightness"), 246)
   title:set({ width = 252 })
   popup.spacer("header", 9)
-  local display_hints = {}
-  for index, hint in ipairs({ "+ → Screen brightness up", "− → Screen brightness down" }) do
-    local row = sbar.add("item", "brightness.keys." .. index, row(22))
-    row:set({ label = { string = hint, font = popup.fonts.caption, color = theme.muted, width = 240, align = "left" } })
-    display_hints[#display_hints + 1] = row
-  end
+  popup.hints({ "+ → Screen brightness up", "− → Screen brightness down" }, "keys", 252)
   popup.separator(252, "hints")
 
   local error_row
   local function add_slider(target)
-    local slider = sbar.add("slider", "brightness." .. target .. ".slider", 198, row(40))
-    slider:set({
-      label = { drawing = true, string = "—", width = 48, align = "right", padding_left = 0, padding_right = 6 },
-      slider = {
-        highlight_color = theme.primary,
-        knob = { string = "􀀁", font = "SF Pro:Regular:20.0", color = theme.text, y_offset = 0 },
-        background = { height = 8, color = theme.surface, corner_radius = 4 },
-      },
-    })
+    local slider = popup.slider(target .. ".slider", 198, "—", 252)
+
     -- Final click also covers presses too short for Hammerspoon's drag sampler.
     -- IPC keeps release writes in the same serialized queue as live drag writes.
     slider:subscribe("mouse.clicked", function(env)
@@ -81,12 +69,10 @@ return function(sbar, theme)
   local display_slider = add_slider("display")
 
   local separator = popup.separator(252, "keyboard")
-  local keyboard_hints = {}
-  for index, hint in ipairs({ "] → Backlight brightness up", "[ → Backlight brightness down" }) do
-    local row = sbar.add("item", "brightness.keyboard.keys." .. index, row(22))
-    row:set({ label = { string = hint, font = popup.fonts.caption, color = theme.muted, width = 240, align = "left" } })
-    keyboard_hints[#keyboard_hints + 1] = row
-  end
+  local keyboard_hints = popup.hints({
+    "] → Backlight brightness up",
+    "[ → Backlight brightness down",
+  }, "keyboard.keys", 252)
   local keyboard_separator = popup.separator(252, "keyboard.hints")
   local keyboard_slider = add_slider("keyboard")
   error_row = sbar.add("item", "brightness.error", row(28))
@@ -117,7 +103,10 @@ return function(sbar, theme)
     refreshing = true
     local request = revision
     sbar.exec(cli.path .. "brightness -l", function(result, code)
-      if request ~= revision or dragging then refreshing = false return end
+      if request ~= revision or dragging then
+        refreshing = false
+        return
+      end
       local display
       if code == 0 then display = cli.display(result) end
       available = display ~= nil
@@ -131,7 +120,10 @@ return function(sbar, theme)
       end
       show_display(display)
       sbar.exec(cli.hardware_command, function(hardware, hardware_code)
-        if request ~= revision or dragging then refreshing = false return end
+        if request ~= revision or dragging then
+          refreshing = false
+          return
+        end
         if hardware_code ~= 0 or not cli.keyboard_hardware(hardware) then
           refreshing = false
           show_keyboard(false)

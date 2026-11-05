@@ -34,21 +34,10 @@ return function(sbar, theme)
   show_switch(false)
 
   popup.spacer("header", 9)
-  for index, hint in ipairs({ "+ → Volume up", "− → Volume down", "M → Mute" }) do
-    local keys = sbar.add("item", "volume.keys." .. index, popup.row(22))
-    keys:set({ label = { string = hint, font = popup.fonts.caption, color = theme.muted } })
-  end
+  popup.hints({ "+ → Volume up", "− → Volume down", "M → Mute" })
   popup.separator(252, "hints")
 
-  local slider = sbar.add("slider", "volume.slider", 198, popup.row(40))
-  slider:set({
-    label = { drawing = true, string = "0%", width = 48, align = "right", padding_left = 0, padding_right = 6 },
-    slider = {
-      highlight_color = theme.primary,
-      knob = { string = "􀀁", font = "SF Pro:Regular:20.0", color = theme.text, y_offset = 0 },
-      background = { height = 8, color = theme.surface, corner_radius = 4 },
-    },
-  })
+  local slider = popup.slider("slider", 198, "0%")
 
   popup.separator(252)
   local heading = sbar.add("item", "volume.device", popup.row())

@@ -13,10 +13,6 @@ local function workspace_order(left, right)
   return left < right
 end
 
-function aerospace.quote(value)
-  return "'" .. value:gsub("'", "'\\''") .. "'"
-end
-
 function aerospace.workspaces(result)
   local names, seen = {}, {}
   for name in result:gmatch("[^\r\n]+") do

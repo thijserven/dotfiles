@@ -40,13 +40,8 @@ return function(sbar, theme)
     sbar.exec("pmset -g batt", receive_battery)
   end
 
-  local function open_battery()
-    popup.close()
-    sbar.exec("open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'")
-  end
-
+  popup.open_on_click(title, "open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'")
   popup.on_open = refresh_battery
-  title:subscribe("mouse.clicked", open_battery)
   battery:subscribe({ "routine", "forced", "power_source_change", "system_woke" }, refresh_battery)
   refresh_battery()
 end

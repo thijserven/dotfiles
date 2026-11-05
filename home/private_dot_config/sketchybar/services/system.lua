@@ -14,31 +14,16 @@ fi
 /bin/ps -axo %cpu=,rss=,comm=
 ]]
 
-function system.parse(text)
-  if type(text) ~= "string" then return nil end
-
-  local cpu
-  for idle in text:gmatch("CPU usage:[^\n]-([%d.]+)%% idle") do
-    cpu = 100 - tonumber(idle)
-  end
-  local page_size = tonumber(text:match("page size of (%d+) bytes"))
-  local total = tonumber(text:match("hw.memsize: (%d+)"))
-  local function pages(name)
-    return tonumber(text:match(name .. ":%s+(%d+)%."))
-  end
-  local active, wired, compressed = pages("Pages active"), pages("Pages wired down"), pages("Pages occupied by compressor")
-  if not cpu or not page_size or not total or total <= 0 or not active or not wired or not compressed then
-    return nil
-  end
-
+local function parse_disk(text)
   local disk_total, disk_available = text:match("\n/dev/%S+%s+(%d+)%s+%d+%s+(%d+)[^\n]-/System/Volumes/Data")
   disk_total, disk_available = tonumber(disk_total), tonumber(disk_available)
-  local disk
   if disk_total and disk_total > 0 and disk_available and disk_available <= disk_total then
     -- APFS free space is shared; include space occupied by other container volumes.
-    disk = { total = disk_total * 1024, used = (disk_total - disk_available) * 1024 }
+    return { total = disk_total * 1024, used = (disk_total - disk_available) * 1024 }
   end
+end
 
+local function parse_consumers(text)
   local apps = {}
   for line in text:gmatch("[^\n]+") do
     local usage, rss, command = line:match("^%s*([%d.]+)%s+(%d+)%s+(.+)$")
@@ -58,6 +43,10 @@ function system.parse(text)
     return a.name < b.name
   end)
 
+  return { consumers[1], consumers[2], consumers[3] }
+end
+
+local function parse_activity(text)
   local sample = { read = 0, write = 0, devices = {}, time = os.time() }
   for id in text:gmatch("<class IOBlockStorageDriver, id (0x%x+),") do
     sample.devices[#sample.devices + 1] = id
@@ -89,6 +78,30 @@ function system.parse(text)
     previous_io = nil
   end
 
+  return activity
+end
+
+function system.parse(text)
+  if type(text) ~= "string" then return nil end
+
+  local cpu
+  for idle in text:gmatch("CPU usage:[^\n]-([%d.]+)%% idle") do
+    cpu = 100 - tonumber(idle)
+  end
+
+  local page_size = tonumber(text:match("page size of (%d+) bytes"))
+  local total = tonumber(text:match("hw.memsize: (%d+)"))
+  local function pages(name)
+    return tonumber(text:match(name .. ":%s+(%d+)%."))
+  end
+
+  local active = pages("Pages active")
+  local wired = pages("Pages wired down")
+  local compressed = pages("Pages occupied by compressor")
+  if not cpu or not page_size or not total or total <= 0 or not active or not wired or not compressed then
+    return nil
+  end
+
   local temperature = tonumber(text:match('"cpu_temp_avg"%s*:%s*([%d.]+)'))
 
   return {
@@ -96,9 +109,9 @@ function system.parse(text)
     temperature = temperature and temperature > 0 and temperature < 150 and temperature or nil,
     total = total,
     used = (active + wired + compressed) * page_size,
-    disk = disk,
-    activity = activity,
-    consumers = { consumers[1], consumers[2], consumers[3] },
+    disk = parse_disk(text),
+    activity = parse_activity(text),
+    consumers = parse_consumers(text),
   }
 end
 

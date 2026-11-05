@@ -7,10 +7,7 @@ return function(sbar, theme)
   local popup = require("ui.popup")(sbar, theme, owner, "system")
   popup.spacer("top", popup.top_padding)
   local heading = popup.header("heading", "System load", 340)
-  heading:subscribe("mouse.clicked", function()
-    popup.close()
-    sbar.exec("/usr/bin/open -a Stats")
-  end)
+  popup.open_on_click(heading, "/usr/bin/open -a Stats")
   popup.spacer("header", 9)
 
   local rows = {}
@@ -42,70 +39,78 @@ return function(sbar, theme)
     return theme.text
   end
 
+  local function show_unavailable()
+    owner:set({ icon = { color = theme.text } })
+    for _, row in pairs(rows) do
+      row:set({ label = { string = "Unavailable", color = theme.muted } })
+    end
+    for _, row in ipairs(consumers) do
+      row:set({ icon = { string = "—" }, label = { string = "Unavailable", color = theme.muted } })
+    end
+  end
+
+  local function show_system(data)
+    local ram = data.used / data.total * 100
+    local values = {
+      cpu = string.format("%.1f%%", data.cpu),
+      temperature = data.temperature and string.format("%.1f °C", data.temperature) or "Unavailable",
+      ram = string.format("%.1f%%", ram),
+      ram_space = string.format("%.1f / %.1f GiB", data.used / 2^30, data.total / 2^30),
+      disk_activity = data.activity and string.format("R %.1f / W %.1f MiB/s", data.activity.read, data.activity.write) or "—",
+      disk = data.disk and string.format("%.1f%%", data.disk.used / data.disk.total * 100) or "Unavailable",
+      disk_space = data.disk and string.format("%.1f / %.1f GiB", data.disk.used / 2^30, data.disk.total / 2^30) or "Unavailable",
+    }
+    local disk_color = usage_color(data.disk and data.disk.used / data.disk.total * 100, 80, 90)
+    local ram_color = usage_color(ram, 70, 90)
+    local colors = {
+      cpu = usage_color(data.cpu, 70, 90),
+      temperature = usage_color(data.temperature, 80, 95),
+      ram = ram_color,
+      ram_space = ram_color,
+      disk_activity = data.activity and theme.text or theme.muted,
+      disk = disk_color,
+      disk_space = disk_color,
+    }
+    local overall_color = theme.text
+    for _, color in ipairs({ colors.cpu, colors.temperature, colors.ram }) do
+      if color == theme.error then
+        overall_color = theme.error
+        break
+      elseif color == theme.warning then
+        overall_color = theme.warning
+      end
+    end
+    owner:set({ label = { string = "" }, icon = { color = overall_color } })
+    for name, value in pairs(values) do
+      rows[name]:set({ label = { string = value, color = colors[name] } })
+    end
+    for index, row in ipairs(consumers) do
+      local app = data.consumers[index]
+      row:set({
+        icon = { string = app and app.name or "—" },
+        label = {
+          string = app and string.format("%.1f%% / %.2f GiB", app.cpu, app.memory / 2^30) or "—",
+          color = usage_color(app and math.max(app.cpu, app.memory / data.total * 100), 70, 90),
+        },
+      })
+    end
+  end
+
   local busy = false
+  local function receive_system(result, code)
+    busy = false
+    local data = code == 0 and system.parse(result)
+    if data then
+      show_system(data)
+    else
+      show_unavailable()
+    end
+  end
+
   local function refresh()
     if busy then return end
     busy = true
-
-    sbar.exec(system.command, function(result, code)
-      busy = false
-      local data = code == 0 and system.parse(result)
-      if not data then
-        owner:set({ icon = { color = theme.text } })
-        for _, row in pairs(rows) do
-          row:set({ label = { string = "Unavailable", color = theme.muted } })
-        end
-        for _, row in ipairs(consumers) do
-          row:set({ icon = { string = "—" }, label = { string = "Unavailable", color = theme.muted } })
-        end
-        return
-      end
-
-      local ram = data.used / data.total * 100
-      local values = {
-        cpu = string.format("%.1f%%", data.cpu),
-        temperature = data.temperature and string.format("%.1f °C", data.temperature) or "Unavailable",
-        ram = string.format("%.1f%%", ram),
-        ram_space = string.format("%.1f / %.1f GiB", data.used / 2^30, data.total / 2^30),
-        disk_activity = data.activity and string.format("R %.1f / W %.1f MiB/s", data.activity.read, data.activity.write) or "—",
-        disk = data.disk and string.format("%.1f%%", data.disk.used / data.disk.total * 100) or "Unavailable",
-        disk_space = data.disk and string.format("%.1f / %.1f GiB", data.disk.used / 2^30, data.disk.total / 2^30) or "Unavailable",
-      }
-      local disk_color = usage_color(data.disk and data.disk.used / data.disk.total * 100, 80, 90)
-      local ram_color = usage_color(ram, 70, 90)
-      local colors = {
-        cpu = usage_color(data.cpu, 70, 90),
-        temperature = usage_color(data.temperature, 80, 95),
-        ram = ram_color,
-        ram_space = ram_color,
-        disk_activity = data.activity and theme.text or theme.muted,
-        disk = disk_color,
-        disk_space = disk_color,
-      }
-      local overall_color = theme.text
-      for _, color in ipairs({ colors.cpu, colors.temperature, colors.ram }) do
-        if color == theme.error then
-          overall_color = theme.error
-          break
-        elseif color == theme.warning then
-          overall_color = theme.warning
-        end
-      end
-      owner:set({ label = { string = "" }, icon = { color = overall_color } })
-      for name, value in pairs(values) do
-        rows[name]:set({ label = { string = value, color = colors[name] } })
-      end
-      for index, row in ipairs(consumers) do
-        local app = data.consumers[index]
-        row:set({
-          icon = { string = app and app.name or "—" },
-          label = {
-            string = app and string.format("%.1f%% / %.2f GiB", app.cpu, app.memory / 2^30) or "—",
-            color = usage_color(app and math.max(app.cpu, app.memory / data.total * 100), 70, 90),
-          },
-        })
-      end
-    end)
+    sbar.exec(system.command, receive_system)
   end
 
   popup.on_open = refresh

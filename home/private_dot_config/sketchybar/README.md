@@ -2,8 +2,10 @@
 
 Configuration lives in `init.lua`; palette and shared popup styles live in
 `theme.lua`; reusable UI code lives in `ui/`. `ui/popup.lua`
-shares row padding, spacers, separators and mouse open/close handling between
-network and volume. New popups use
+shares row padding, hint rows, slider appearance, spacers, separators and
+mouse open/close handling across components. `popup.hints` creates caption rows;
+`popup.slider` creates native percentage sliders while components own value changes.
+`popup.open_on_click` closes a popup before opening settings or an app. New popups use
 `require("ui.popup")(sbar, theme, owner, "feature")`, then assign `on_open`/`on_close`
 callbacks when needed. `popup.columns` creates shared left-label/right-value rows with muted field labels;
 titles and values keep normal text colors, with accents for active controls.
@@ -17,7 +19,9 @@ positioning in `ui/shortcuts.lua`. Clock and left-side text items keep their own
 `popup.keyboard_state("audio-popup")` opts into initial, open/close and routine
 state publication; feature callbacks only manage feature state.
 `services/network.lua` keeps counter math, units and signal icons independent of UI.
-`services/aerospace.lua` owns workspace ordering, shell quoting and binding formatting;
+`services/shell.lua` owns shell argument quoting for workspace, clipboard and speed-test commands.
+`services/system.lua` separates memory/CPU, storage, disk activity and app-consumer parsing.
+`services/aerospace.lua` owns workspace ordering and binding formatting;
 `components/aerospace.lua` keeps reconciliation and popup presentation.
 `services/speedtest.lua` owns asynchronous speed-test start/cancel/completion state;
 network widget owns presentation. Shell helpers live in `services/` and handle

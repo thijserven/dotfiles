@@ -6,7 +6,9 @@ local state_path = os.getenv("HOME") .. "/.cache/sketchybar/popup-open"
 
 local function publish_state()
   local opened = false
-  for _, popup in ipairs(popups) do opened = opened or popup.opened end
+  for _, popup in ipairs(popups) do
+    opened = opened or popup.opened
+  end
   state.publish(state_path, opened)
 end
 
@@ -17,7 +19,9 @@ return function(sbar, theme, owner, prefix)
     listener:subscribe("routine", publish_state)
     listener:subscribe("popup_close_all", function()
       for _, popup in ipairs(popups) do
-        if popup.opened then popup.close() end
+        if popup.opened then
+          popup.close()
+        end
       end
     end)
     publish_state()
@@ -64,6 +68,54 @@ return function(sbar, theme, owner, prefix)
         max_chars = 35,
       },
     }
+  end
+
+  function popup.hints(hints, name, width)
+    local rows = {}
+    for index, hint in ipairs(hints) do
+      local properties = popup.row(22)
+      properties.width = width
+      properties.label = {
+        string = hint,
+        font = popup.fonts.caption,
+        color = theme.muted,
+        width = width and width - 12 or nil,
+        align = "left",
+        padding_left = 6,
+        padding_right = 6,
+        max_chars = 35,
+      }
+      rows[index] = sbar.add("item", prefix .. "." .. (name or "keys") .. "." .. index, properties)
+    end
+    return rows
+  end
+
+  function popup.slider(name, width, initial, row_width)
+    local properties = popup.row(40)
+    properties.width = row_width
+    properties.label = {
+      drawing = true,
+      string = initial,
+      font = popup.fonts.body,
+      max_chars = 35,
+      width = 48,
+      align = "right",
+      padding_left = 0,
+      padding_right = 6,
+    }
+    properties.slider = {
+      highlight_color = theme.primary,
+      knob = { string = "􀀁", font = "SF Pro:Regular:20.0", color = theme.text, y_offset = 0 },
+      background = { height = 8, color = theme.surface, corner_radius = 4 },
+    }
+    return sbar.add("slider", prefix .. "." .. name, width, properties)
+  end
+
+  function popup.open_on_click(item, command)
+    item:subscribe("mouse.clicked", function()
+      popup.close()
+      sbar.exec(command)
+    end)
   end
 
   function popup.columns(name, left, right, left_width, right_width, height)
@@ -208,7 +260,9 @@ return function(sbar, theme, owner, prefix)
     if popup.on_open then
       popup.on_open()
     end
-    if not popup.defer_open then popup.ready() end
+    if not popup.defer_open then
+      popup.ready()
+    end
   end
 
   popups[#popups + 1] = popup
