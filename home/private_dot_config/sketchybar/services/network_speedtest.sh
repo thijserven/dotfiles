@@ -47,7 +47,8 @@ run() {
   trap 'rm -rf -- "$dir"' EXIT
   [ ! -e "$dir/cancel" ] || exit 130
   # User requested noninteractive acceptance of Ookla's license/privacy terms.
-  speedtest --accept-license --accept-gdpr --format=json --progress=no &
+  speedtest --accept-license --accept-gdpr --format=json --progress=yes \
+    --progress-update-interval=1000 > "$dir/progress" &
   pid=$!
   printf '%s\n' "$pid" > "$dir/pid"
   # Cancellation may arrive before PID is published.
@@ -55,6 +56,7 @@ run() {
     kill "$pid" 2>/dev/null || :
   fi
   wait "$pid"
+  tail -n 1 "$dir/progress"
 }
 
 main() {
@@ -69,6 +71,9 @@ main() {
       ;;
     cancel)
       cancel
+      ;;
+    progress)
+      tail -n 1 "$dir/progress" 2>/dev/null || :
       ;;
     *)
       exit 1

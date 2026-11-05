@@ -54,9 +54,6 @@
     },
     "applications": {
       "entrypoints": {
-        "ai.opencode": {
-          "shortcut": "super+control+alt+shift+O"
-        },
         "com.apple.finder": {
           "shortcut": "super+control+alt+shift+F"
         },
@@ -66,8 +63,11 @@
         "com.microsoft.VSCode": {
           "shortcut": "super+control+alt+shift+C"
         },
-        "com.openai.codex": {
-          "shortcut": "super+control+alt+shift+G"
+        "com.prusa3d.OrcaSlicer": {
+          "shortcut": "super+control+alt+shift+P"
+        },
+        "com.apple.systempreferences": {
+          "shortcut": "super+control+alt+shift+S"
         }
       }
     }

@@ -144,12 +144,16 @@ return function(sbar, theme)
   end
 
   local function show_test(state, result)
-    heading:set({ label = { color = state == "running" and theme.primary or theme.text } })
+    local active = state == "running" or state == "progress"
+    heading:set({ label = { color = active and theme.primary or theme.text } })
     if state == "running" then
-      test:set({ label = { string = "Running…" } })
-      test_upload:set({ label = { string = "Running…" } })
+      test:set({ label = { string = "Preparing…" } })
+      test_upload:set({ label = { string = "Waiting…" } })
       pair(latency, "Ping", "—")
       pair(loss_row, "Packet loss", "—")
+    elseif state == "progress" then
+      local item = result.type == "download" and test or test_upload
+      item:set({ label = { string = format.speed(result[result.type].bandwidth) } })
     elseif state == "complete" then
       test:set({ label = { string = format.speed(result.download.bandwidth) } })
       test_upload:set({ label = { string = format.speed(result.upload.bandwidth) } })

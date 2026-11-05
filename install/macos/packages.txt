@@ -66,5 +66,6 @@ cask "localsend"
 cask "orbstack"
 cask "spotify"
 cask "stats"
+cask "tangency-labs/tap/solidcraft", trusted: true
 cask "vicinae"
 cask "visual-studio-code"

@@ -5,6 +5,35 @@ return function(sbar, notify)
   local running, cancelled, directory = false, false, nil
   local helper = 'sh "$HOME/.config/sketchybar/services/network_speedtest.sh" '
   local speedtest = {}
+  local progress_busy = false
+  local progress = sbar.add("item", "network_speedtest_progress", {
+    drawing = false,
+    updates = "on",
+    update_freq = 1,
+  })
+
+  progress:subscribe("routine", function()
+    if not running or cancelled or not directory or progress_busy then
+      return
+    end
+
+    local current = directory
+    progress_busy = true
+    sbar.exec(helper .. "progress " .. shell.quote(current), function(result, code)
+      progress_busy = false
+      -- Ignore reads that finish after cancellation, completion, or a new run.
+      if not running or cancelled or directory ~= current or code ~= 0
+        or type(result) ~= "table" then
+        return
+      end
+
+      local phase = result.type
+      if (phase == "download" or phase == "upload") and type(result[phase]) == "table"
+        and type(result[phase].bandwidth) == "number" then
+        notify("progress", result)
+      end
+    end)
+  end)
 
   local function cancel_process()
     if directory then

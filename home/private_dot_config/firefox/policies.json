@@ -54,24 +54,39 @@
     "DisplayBookmarksToolbar": "always",
     "Bookmarks": [
       {
-        "Title": "Gmail",
-        "URL": "https://mail.google.com/"
+        "Title": "YouTube",
+        "URL": "https://youtube.com/"
       },
       {
-        "Title": "ChatGPT",
-        "URL": "https://chatgpt.com/"
+        "Title": "Gmail",
+        "URL": "https://mail.google.com/"
       },
       {
         "Title": "GitHub",
         "URL": "https://github.com/"
       },
       {
-        "Title": "YouTube",
-        "URL": "https://youtube.com/"
+        "Title": "Claude",
+        "URL": "https://claude.ai/",
+        "Folder": "AI"
+      },
+      {
+        "Title": "ChatGPT",
+        "URL": "https://chatgpt.com/",
+        "Folder": "AI"
+      },
+      {
+        "Title": "Gemini",
+        "URL": "https://gemini.google.com/",
+        "Folder": "AI"
       },
       {
         "Title": "Drive",
         "URL": "https://drive.google.com/"
+      },
+      {
+        "Title": "Calendar",
+        "URL": "https://calendar.google.com/"
       },
       {
         "Title": "Facebook",
@@ -86,6 +101,21 @@
       {
         "Title": "Cults",
         "URL": "https://cults3d.com/",
+        "Folder": "3D Printing"
+      },
+      {
+        "Title": "Makerworld",
+        "URL": "https://makerworld.com/",
+        "Folder": "3D Printing"
+      },
+      {
+        "Title": "Printables",
+        "URL": "https://printables.com/",
+        "Folder": "3D Printing"
+      },
+      {
+        "Title": "Thingiverse",
+        "URL": "https://thingiverse.com/",
         "Folder": "3D Printing"
       }
     ],
