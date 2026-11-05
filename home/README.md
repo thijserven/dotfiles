@@ -12,8 +12,8 @@
 | [`.chezmoiscripts/`](.chezmoiscripts/.README.md)                   | Conditional wrappers for shell scripts in [`install/`](../install/README.md) |
 | [`.chezmoitemplates/`](.chezmoitemplates/README.md)                | Shared VS Code templates                                                     |
 | [`private_dot_config/`](private_dot_config/README.md)              | Configuration deployed to `~/.config/`                                       |
-| [`dot_hammerspoon/`](dot_hammerspoon/README.md)                    | macOS automation deployed to `~/.hammerspoon/`                               |
-| [`Library/`](Library/README.md)                                    | macOS application configuration                                              |
+| [`dot_hammerspoon/`](private_dot_hammerspoon/README.md)                    | macOS automation deployed to `~/.hammerspoon/`                               |
+| [`Library/`](private_Library/README.md)                                    | macOS application configuration                                              |
 | [`private_dot_ssh/`](private_dot_ssh/README.md)                    | Encrypted SSH configuration and keys                                         |
 | [`dot_zshrc`](dot_zshrc), [`dot_zprofile.tmpl`](dot_zprofile.tmpl) | [Zsh entry points](private_dot_config/zsh/README.md)                         |
 

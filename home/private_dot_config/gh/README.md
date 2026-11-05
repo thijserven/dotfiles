@@ -14,7 +14,7 @@ gh auth status
 gh co 123
 ```
 
-No encrypted `hosts.yml` is currently tracked in this directory. Do not add plaintext authentication tokens to Git; use chezmoi encryption if tracking credentials. See [repository encryption guidance](../../../README.md).
+No encrypted `hosts.yml` is currently tracked in this directory. Do not add plaintext authentication tokens to Git; use chezmoi encryption if tracking credentials. See [repository encryption guidance](../../../../README.md).
 
 [Git configuration](../git/README.md) controls separate Git aliases and credential-helper settings.
 
