@@ -12,15 +12,16 @@ Run from the repository you want to change:
 
 The command runs one coordinator in a background child session. The parent session keeps its agent and model, remains usable, and receives the result when the child finishes. Ordinary prompts do not select this pipeline. Avoid concurrent edits to the same files while it runs.
 
-| Agent | Responsibility | Restrictions |
-| --- | --- | --- |
-| `engineer` | Research, acceptance criteria, implementation plan, handoffs, repair loop, final summary | No edits or shell; may launch only coder and reviewer |
-| `engineer-coder` | Scoped implementation, self-review, permitted checks, fixes, evidence | No further delegation |
-| `engineer-reviewer` | Independent requirements and code-quality review of actual changes | No edits or delegation; shell limited to Git status, diff, and log |
+| Agent                | Model            | Responsibility                                                                        | Restrictions                                                        |
+| -------------------- | ---------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `engineer`           | Inherits active  | Coordinates workflow, acceptance criteria, handoffs, repair loop, final summary     | No edits or shell; may launch only architect, coder, and reviewer    |
+| `engineer-architect` | `9router/high`   | Investigates request and produces focused implementation plan                        | No edits or delegation; shell requires approval                     |
+| `engineer-coder`     | `9router/default`| Implements plan, self-reviews, runs permitted checks, fixes findings, records evidence | No further delegation                                                |
+| `engineer-reviewer`  | `9router/high`   | Independently reviews request, plan, and actual changes                              | No edits or delegation; read-only inspection, shell requires approval |
 
-The reviewer checks staged, unstaged, and untracked changes against the coder's recorded baseline. Test/build execution evidence comes from the coder, not independent reviewer execution. Review returns separate spec-compliance and code-quality verdicts; both must pass. Blocking findings return to the coder, followed by review of the fixes. After three unsuccessful repair rounds, or earlier stalled progress, the coordinator reports a blocker rather than claiming completion. Any post-review edit requires affected checks and review again.
+The architect researches relevant code and produces goal, findings, plan, verification, and risks/questions. It does not implement or delegate. The reviewer returns one verdict: `PASS`, `CHANGES_REQUESTED`, or `BLOCKED`; requested changes identify severity, location, evidence, and correction. Blocking findings return to the coder, followed by review of fixes. After three unsuccessful repair rounds, or earlier stalled progress, the coordinator reports a blocker rather than claiming completion. Any post-review edit requires affected checks and review again.
 
-Agents inherit the active model; no provider-specific model IDs are pinned. Repository instructions govern validation and whether tests may be added. No automatic commits, pushes, deployments, plan files, or shared workflow state files are requested.
+The coordinator uses active model; architect and reviewer pin `9router/high`, while coder pins `9router/default`. Repository instructions govern validation and whether tests may be added. No automatic commits, pushes, deployments, plan files, or shared workflow state files are requested.
 
 ### Invocation and scope
 
