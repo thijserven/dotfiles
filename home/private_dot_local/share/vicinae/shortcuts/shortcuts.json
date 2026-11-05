@@ -12,5 +12,26 @@
     "icon": "icon://bundle//Applications/Visual%20Studio%20Code.app",
     "url": "file:///Users/thijs/Developer/homelab",
     "app": "com.microsoft.VSCode"
+  },
+  {
+    "id": "sct_chatgpt",
+    "name": "ChatGPT",
+    "icon": "icon://favicon/chatgpt.com",
+    "url": "https://chatgpt.com",
+    "app": "default"
+  },
+  {
+    "id": "sct_github",
+    "name": "GitHub",
+    "icon": "icon://favicon/github.com",
+    "url": "https://github.com/thijserven?tab=repositories",
+    "app": "default"
+  },
+  {
+    "id": "sct_youtube",
+    "name": "YouTube",
+    "icon": "icon://favicon/youtube.com",
+    "url": "https://youtube.com",
+    "app": "default"
   }
 ]
