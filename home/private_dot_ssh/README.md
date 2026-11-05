@@ -1,6 +1,6 @@
 # SSH
 
-Maps to `~/.ssh/` with restrictive permissions. Configuration and key material stay age-encrypted in source state; `private_keys/` maps to `~/.ssh/keys/`. See [bootstrap and encryption](../../install/common/README.md) for identity recovery and recipient rotation.
+Maps to `~/.ssh/` with restrictive permissions. Configuration and key material stay age-encrypted in source state; `private_keys/` maps to `~/.ssh/keys/`. See [bootstrap and encryption](../../install/README.md) for identity recovery and recipient rotation.
 
 ## Maintenance
 

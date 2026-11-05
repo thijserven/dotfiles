@@ -1,7 +1,6 @@
 zsh
 starship
 eza
-bat
 fzf
 fd
 ripgrep

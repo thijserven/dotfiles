@@ -26,8 +26,8 @@ Follow [setup and daily usage](home/README.md) for prerequisites, bootstrap comm
 - [Shared templates](home/.chezmoitemplates/README.md) — VS Code settings, keybindings, and extensions for both platforms.
 - [Application configuration](home/private_dot_config/README.md) — directory index for shell, Git, terminals, launcher, and desktop tools.
 - [Zsh](home/private_dot_config/zsh/README.md) — startup order, environment, plugins, history, and fuzzy finding.
-- [Hammerspoon](home/dot_hammerspoon/README.md) — macOS automation and login startup.
-- [macOS Library](home/Library/README.md) — macOS VS Code target paths.
+- [Hammerspoon](home/private_dot_hammerspoon/README.md) — macOS automation and login startup.
+- [macOS Library](home/private_Library/README.md) — macOS VS Code target paths.
 - [SSH](home/private_dot_ssh/README.md) — encrypted SSH configuration and keys.
 - [Assets](assets/README.md) — wallpaper used by macOS setup.
 - [Keybindings](vendor/keybindings/README.md) — native Vicinae extension, modified from [Raycast Shortcut Library](https://github.com/raycast/extensions/tree/ff678517a421538e8533030aa447420631886169/extensions/shortcut-library); built from `vendor/`, not deployed as configuration.

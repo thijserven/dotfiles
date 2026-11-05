@@ -15,6 +15,7 @@ brew "ripgrep"
 # Dev tools
 brew "curl"
 brew "direnv"
+brew "fd"
 brew "gh"
 brew "git"
 brew "jq"

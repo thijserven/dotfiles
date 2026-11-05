@@ -17,21 +17,14 @@ export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }\
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
 export FZF_CTRL_T_OPTS="--style full \
---bind 'enter:execute-silent(for file in {+}; do
-  if root=\$(git -C \"\$(dirname -- \"\$file\")\" rev-parse --show-toplevel 2>/dev/null); then
-    \${EDITOR:-code} -- \"\$root\" \"\$file\"
-  else
-    \${EDITOR:-code} -- \"\$file\"
-  fi
-done)+abort' \
---preview 'bat -n \
---color=always \
---line-range :500 {}' \
 --border sharp \
 --layout reverse \
 --prompt '∷ ' \
 --pointer ▶ \
 --marker ⇒"
+
+# Keep shell quotes escaped for fzf's option parser, not only for Zsh.
+FZF_CTRL_T_OPTS+=' --bind "enter:execute(for file in {+}; do if root=$(git -C \"$(dirname -- \"$file\")\" rev-parse --show-toplevel 2>/dev/null); then code -- \"$root\" \"$file\"; else code --reuse-window -- \"$file\"; fi; done)+abort"'
 
 # ---- Yazi -----
 # Shell wrapper for yazi to change directory after selection
