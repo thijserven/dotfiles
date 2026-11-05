@@ -31,6 +31,10 @@ Opt-in covers the supplied task and requested repairs, not later unrelated promp
 
 `experimental.subagent_depth = 2` is required because the coordinator itself runs as a child and launches coder/reviewer grandchildren. This experimental V2 setting is global; worker permission rules deny additional delegation. Agent instructions and permissions constrain behavior but are not a deterministic workflow engine or OS sandbox. No plugin enforces review verdicts. Project configuration can override global configuration.
 
+## Pull request review
+
+Run `/review-pr` from a branch with an associated GitHub pull request. It retrieves all unresolved review threads and every comment through GraphQL pagination before reviewing. Retrieval errors stop the workflow; no PR and no unresolved threads are reported distinctly. The command makes only focused local edits for confirmed defects, otherwise gives evidence-backed explanations. It never writes to GitHub, commits, pushes, or deploys.
+
 ## Deployment and validation
 
 Preview source changes with `chezmoi diff`. Deploy only this configuration when desired:
