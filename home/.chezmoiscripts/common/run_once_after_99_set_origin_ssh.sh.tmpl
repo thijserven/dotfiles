@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -eu
+
+cd {{ .chezmoi.workingTree | quote }}
+origin=$(git remote get-url origin)
+case "$origin" in
+  https://github.com/*)
+    git remote set-url origin "git@github.com:${origin#https://github.com/}"
+    ;;
+esac
