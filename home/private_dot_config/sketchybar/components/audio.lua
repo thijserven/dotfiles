@@ -6,11 +6,9 @@ local function percentage(value)
 end
 
 return function(sbar, theme)
-  local volume = sbar.add("item", "volume", {
-    position = "right",
+  local volume = require("ui.status_icon")(sbar, "volume", {
     update_freq = 5,
-    icon = { drawing = true, string = "􀊩" },
-    label = { drawing = false },
+    icon = { string = "􀊩", font = "SF Pro:Regular:16.0" },
   })
   local popup = require("ui.popup")(sbar, theme, volume, "volume")
   popup.defer_open = true
@@ -24,7 +22,7 @@ return function(sbar, theme)
 
   local toggle_mute
   local mute_available = true
-  local title = popup.header("title", popup.title(utf8.char(0xf028), "Audio"), 240, {
+  local title = popup.header("title", popup.title("􀊩", "Audio"), 240, {
     icon = "",
     width = 38,
     on_click = function() toggle_mute() end,
@@ -36,21 +34,10 @@ return function(sbar, theme)
   show_switch(false)
 
   popup.spacer("header", 9)
-  for index, hint in ipairs({ "+ → Volume up", "− → Volume down", "M → Mute" }) do
-    local keys = sbar.add("item", "volume.keys." .. index, popup.row(22))
-    keys:set({ label = { string = hint, font = popup.fonts.caption, color = theme.muted } })
-  end
+  popup.hints({ "+ → Volume up", "− → Volume down", "M → Mute" })
   popup.separator(252, "hints")
 
-  local slider = sbar.add("slider", "volume.slider", 198, popup.row(40))
-  slider:set({
-    label = { drawing = true, string = "0%", width = 48, align = "right", padding_left = 0, padding_right = 6 },
-    slider = {
-      highlight_color = theme.primary,
-      knob = { string = "􀀁", font = "SF Pro:Regular:20.0", color = theme.text, y_offset = 0 },
-      background = { height = 8, color = theme.surface, corner_radius = 4 },
-    },
-  })
+  local slider = popup.slider("slider", 198, "0%")
 
   popup.separator(252)
   local heading = sbar.add("item", "volume.device", popup.row())
@@ -66,7 +53,7 @@ return function(sbar, theme)
     level = number
     local icon = level == 0 and "􀊣" or "􀊩"
     volume:set({ icon = icon })
-    title:set({ icon = { string = popup.title(utf8.char(level == 0 and 0xf026 or 0xf028), "Audio") } })
+    title:set({ icon = { string = popup.title(icon, "Audio") } })
     slider:set({ slider = { percentage = level }, label = level .. "%" })
   end
 

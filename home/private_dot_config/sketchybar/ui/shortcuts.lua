@@ -45,7 +45,7 @@ function shortcuts.start(sbar)
           font = "Hack Nerd Font:Bold:9.0",
           align = "right",
           padding_left = 0,
-          padding_right = 2,
+          padding_right = 0,
         },
       })
       -- Zero-width item overlays owner's lower-right edge without shifting layout.

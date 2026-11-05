@@ -1,5 +1,6 @@
 -- Reconcile workspaces after login, display changes and AeroSpace restarts.
 local aerospace = require("services.aerospace")
+local shell = require("services.shell")
 
 return function(sbar, theme)
   sbar.add("event", "aerospace_workspace_change")
@@ -82,10 +83,10 @@ return function(sbar, theme)
 
   local function add_workspace(name)
     local item = sbar.add("item", "space." .. name, {
-      position = "left", label = name, drawing = not service_active,
+      position = "left", label = { string = name, font = "Hack Nerd Font:Bold:13.0" }, drawing = not service_active,
     })
     item:subscribe("mouse.clicked", function()
-      sbar.exec("aerospace workspace " .. aerospace.quote(name))
+      sbar.exec("aerospace workspace " .. shell.quote(name))
     end)
     spaces[name] = item
   end
@@ -103,7 +104,7 @@ return function(sbar, theme)
     local moves = { "sketchybar" }
     for _, name in ipairs(names) do
       if not spaces[name] then add_workspace(name) end
-      moves[#moves + 1] = "--move " .. aerospace.quote("space." .. name) .. " before front_app"
+      moves[#moves + 1] = "--move " .. shell.quote("space." .. name) .. " before front_app"
     end
 
     -- One ordered command: separate asynchronous moves race each other.

@@ -1,4 +1,5 @@
 local audio = require("audio_controls")
+local brightness = require("brightness_controls")
 local sketchybar = require("sketchybar")
 local slider_preview = require("sketchybar_slider_preview")
 local controls = { bindings = {}, visibility = {} }
@@ -25,6 +26,22 @@ end
 bind_volume({}, "-", -5)
 bind_volume({}, "=", 5)
 bind_volume({ "shift" }, "=", 5)
+
+local function bind_brightness(modifiers, key, target, delta)
+  local id = target .. table.concat(modifiers, "+") .. key
+  local source = target == "keyboard" and "brightness-keyboard-popup" or "brightness-popup"
+  bind(modifiers, key, source, function()
+    brightness.press(id, target, delta)
+  end, function()
+    brightness.release(id)
+  end)
+end
+
+bind_brightness({}, "-", "display", -5)
+bind_brightness({}, "=", "display", 5)
+bind_brightness({ "shift" }, "=", "display", 5)
+bind_brightness({}, "[", "keyboard", -5)
+bind_brightness({}, "]", "keyboard", 5)
 bind({}, "m", "audio-popup", function() audio.adjust("mute") end)
 for index = 1, 9 do
   bind({}, tostring(index), "audio-popup", function()
@@ -40,7 +57,7 @@ bind({}, "escape", "popup-open", function() trigger("popup_close_all") end)
 -- Read atomically published state outside keyboard callbacks. A delayed heartbeat
 -- must not disable working hotkeys while the popup remains open.
 local function update_visibility()
-  for _, name in ipairs({ "popup-open", "audio-popup", "network-popup" }) do
+  for _, name in ipairs({ "popup-open", "audio-popup", "network-popup", "brightness-popup", "brightness-keyboard-popup" }) do
     local file = io.open(os.getenv("HOME") .. "/.cache/sketchybar/" .. name, "r")
     if file then
       local state = file:read("*a")
@@ -53,12 +70,15 @@ local function update_visibility()
     end
   end
 
-  if not bar_alive or not controls.visibility["audio-popup"] then
+  if not bar_alive or not controls.visibility["audio-popup"] or controls.visibility["brightness-popup"] then
     audio.stop_repeat()
   end
 
   for _, binding in ipairs(controls.bindings) do
     local enabled = bar_alive and controls.visibility[binding.source] == true
+    if binding.source == "audio-popup" and controls.visibility["brightness-popup"] then enabled = false end
+    if (binding.source == "brightness-keyboard-popup" or binding.source == "brightness-popup")
+      and not controls.visibility["brightness-popup"] then enabled = false end
     if enabled ~= binding.enabled then
       binding.enabled = enabled
       if enabled then
@@ -89,7 +109,8 @@ local function check_bar()
 end
 
 controls.slider_timer = hs.timer.doEvery(0.025, function()
-  slider_preview.update(controls.visibility)
+  slider_preview.update(controls.visibility, bar_alive)
+  brightness.update(controls.visibility, bar_alive)
 end)
 controls.bar_timer = hs.timer.doEvery(2, check_bar)
 controls.timer = hs.timer.doEvery(0.1, update_visibility)

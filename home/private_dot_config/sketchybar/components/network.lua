@@ -1,10 +1,10 @@
 local format = require("services.network")
+local shell = require("services.shell")
 
 return function(sbar, theme)
-  local network = sbar.add("item", "network", {
-    position = "right", update_freq = 3,
-    icon = { drawing = true, string = utf8.char(0xf092e), font = "Hack Nerd Font:Regular:18.0" },
-    label = { drawing = false },
+  local network = require("ui.status_icon")(sbar, "network", {
+    update_freq = 3,
+    icon = { string = utf8.char(0xf092e) },
   })
   local popup = require("ui.popup")(sbar, theme, network, "network")
   popup.defer_open = true
@@ -24,10 +24,12 @@ return function(sbar, theme)
   })
   heading:set({ label = { font = "Hack Nerd Font:Regular:22.0" } })
   popup.spacer("header", 9)
-  for index, hint in ipairs({ "P → Copy public IP address", "G → Copy gateway IP address", "L → Copy local IP address", "T → Test internet speed" }) do
-    local keys = sbar.add("item", "network.keys." .. index, popup.row(22))
-    keys:set({ label = { string = hint, font = popup.fonts.caption, color = theme.muted } })
-  end
+  popup.hints({
+    "P → Copy public IP address",
+    "G → Copy gateway IP address",
+    "L → Copy local IP address",
+    "T → Test internet speed",
+  })
   popup.separator(300)
   local service = row("service", "Reading network…")
 
@@ -56,7 +58,7 @@ return function(sbar, theme)
 
   local function copy_ip(item, ip)
     if not ip then return end
-    sbar.exec("printf '%s' '" .. ip:gsub("'", "'\\''") .. "' | /usr/bin/pbcopy")
+    sbar.exec("printf '%s' " .. shell.quote(ip) .. " | /usr/bin/pbcopy")
     item:set({ label = { color = theme.primary } })
     sbar.animate("linear", 60, function()
       item:set({ label = { color = theme.text } })
@@ -173,19 +175,17 @@ return function(sbar, theme)
     if popup.opened then speedtest.toggle() end
   end)
 
-  sbar.add("event", "network_copy_local_ip")
-  network:subscribe("network_copy_local_ip", function()
-    if popup.opened then copy_ip(address, ip_address) end
-  end)
-  sbar.add("event", "network_copy_public_ip")
-  network:subscribe("network_copy_public_ip", function()
-    if popup.opened then copy_ip(public_address, public_ip) end
-  end)
+  local function copy_shortcut(event, item, current_ip)
+    sbar.add("event", event)
+    network:subscribe(event, function()
+      if popup.opened then copy_ip(item, current_ip()) end
+    end)
+  end
 
-  sbar.add("event", "network_copy_gateway_ip")
-  network:subscribe("network_copy_gateway_ip", function()
-    if popup.opened then copy_ip(gateway, gateway_ip) end
-  end)
+  -- Resolve addresses when pressed, not when registering shortcuts.
+  copy_shortcut("network_copy_local_ip", address, function() return ip_address end)
+  copy_shortcut("network_copy_public_ip", public_address, function() return public_ip end)
+  copy_shortcut("network_copy_gateway_ip", gateway, function() return gateway_ip end)
 
   popup.keyboard_state("network-popup")
   network:subscribe({ "routine", "forced", "system_woke", "wifi_change" }, refresh)

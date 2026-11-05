@@ -25,17 +25,9 @@ if pgrep -f -x -u "$uid" "$pattern" >/dev/null; then echo on; else echo off; fi
 return function(sbar, theme)
   sbar.add("event", "coffee_toggle")
 
-  local coffee = sbar.add("item", "coffee", {
-    position = "right",
-    width = 36,
+  local coffee = require("ui.status_icon")(sbar, "coffee", {
     update_freq = 10,
-    icon = {
-      drawing = true,
-      string = "󰅶",
-      font = "Hack Nerd Font:Regular:18.0",
-      color = theme.text,
-    },
-    label = { drawing = false },
+    icon = { string = "󰅶" },
   })
 
   local busy = false

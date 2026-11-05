@@ -1,4 +1,4 @@
--- Tap Caps Lock for Escape; hold for Hyper. Defer Firefox until release.
+-- Hold Caps Lock for Hyper. Defer Firefox until release.
 local capsLock = require("caps_lock")
 local sketchybar = require("sketchybar")
 local hyper = {}
@@ -7,7 +7,7 @@ local types = hs.eventtap.event.types
 local keys = hs.keycodes.map
 local modifiers = { cmd = true, alt = true, ctrl = true, shift = true }
 
-local held, used = false, false
+local held = false
 local pressed = {}
 local firefoxPressed = false
 
@@ -38,23 +38,12 @@ end
 local function handleHyperKey(isKeyDown)
   if isKeyDown then
     if not held then
-      held, used = true, false
+      held = true
       showHints(true)
     end
   else
-    local sendEscape = held and not used
-    held, used = false, false
+    held = false
     showHints(false)
-
-    local popup_keys = package.loaded.sketchybar_audio_keys
-    if sendEscape and not (type(popup_keys) == "table" and popup_keys.visibility and popup_keys.visibility["popup-open"]) then
-      -- Mark tap-generated Escape so popup handling leaves Hyper taps alone.
-      for _, down in ipairs({ true, false }) do
-        hs.eventtap.event.newKeyEvent({}, "escape", down)
-          :setProperty(hs.eventtap.event.properties.eventSourceUserData, 0x48595045)
-          :post()
-      end
-    end
   end
 end
 
@@ -68,7 +57,6 @@ local function handleKey(event)
   end
 
   if key == keys.b and (held or firefoxPressed) then
-    used = true
     firefoxPressed = isKeyDown
     if isKeyDown then
       queueFirefox()
@@ -78,7 +66,6 @@ local function handleKey(event)
 
   -- Keep matching flags on key-up even if Caps Lock was released first.
   if held or pressed[key] then
-    used = true
     pressed[key] = isKeyDown or nil
     event:setFlags(modifiers)
   end
@@ -88,7 +75,7 @@ end
 
 local function handleWake(event)
   if event == hs.caffeinate.watcher.systemDidWake then
-    held, used = false, false
+    held = false
     pressed = {}
     firefoxPressed = false
     if hyper.firefoxTimer then

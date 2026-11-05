@@ -2,26 +2,39 @@
 
 Configuration lives in `init.lua`; palette and shared popup styles live in
 `theme.lua`; reusable UI code lives in `ui/`. `ui/popup.lua`
-shares row padding, spacers, separators and mouse open/close handling between
-network and volume. New popups use
+shares row padding, hint rows, slider appearance, spacers, separators and
+mouse open/close handling across components. `popup.hints` creates caption rows;
+`popup.slider` creates native percentage sliders while components own value changes.
+`popup.open_on_click` closes a popup before opening settings or an app. New popups use
 `require("ui.popup")(sbar, theme, owner, "feature")`, then assign `on_open`/`on_close`
-callbacks when needed. `popup.columns` creates shared left-label/right-value rows;
-feature-specific widths and controls stay in `components/`.
+callbacks when needed. `popup.columns` creates shared left-label/right-value rows with muted field labels;
+titles and values keep normal text colors, with accents for active controls.
+Feature-specific widths and controls stay in `components/`.
+`ui/status_icon.lua` gives battery, brightness, volume, network, coffee and system
+icons shared 36-pixel item and icon widths, centered glyphs, zero internal icon
+padding and hidden labels. Battery uses balanced -3/+3 icon padding for optical
+alignment toward brightness without changing item width. Components
+supply symbols, optional fonts and update settings; numbered hints use shared
+positioning in `ui/shortcuts.lua`. Clock and left-side text items keep their own layouts.
 `popup.keyboard_state("audio-popup")` opts into initial, open/close and routine
 state publication; feature callbacks only manage feature state.
 `services/network.lua` keeps counter math, units and signal icons independent of UI.
-`services/aerospace.lua` owns workspace ordering, shell quoting and binding formatting;
+`services/shell.lua` owns shell argument quoting for workspace, clipboard and speed-test commands.
+`services/system.lua` separates memory/CPU, storage, disk activity and app-consumer parsing.
+`services/aerospace.lua` owns workspace ordering and binding formatting;
 `components/aerospace.lua` keeps reconciliation and popup presentation.
 `services/speedtest.lua` owns asynchronous speed-test start/cancel/completion state;
 network widget owns presentation. Shell helpers live in `services/` and handle
 native macOS commands and speed-test process control.
-`components/battery.lua` arranges clock
-and battery; `coffee.lua` owns keep-awake commands and state. Right-side order
-(left to right) is system load, coffee, network, volume, battery, then a 5-point gap and clock.
+`components/battery.lua` owns battery state; `components/clock.lua` owns clock
+text and clicks. `coffee.lua` owns keep-awake commands and state. Right-side order
+(left to right) is system load, coffee, network, volume, brightness, battery and clock.
 `ui/shortcuts.lua` reverses popup registration order to match right-side rendering:
 Hyper+1 opens system load, Hyper+2 toggles caffeinate, Hyper+3 opens network,
-Hyper+4 opens volume, Hyper+5 opens Battery settings, and Hyper+6 opens macOS Clock.
-Battery and clock clicks run the same actions; clock displays `Friday Oct 30 17:37`.
+Hyper+4 opens volume, Hyper+5 opens brightness, Hyper+6 toggles battery popup,
+and Hyper+7 opens macOS Clock.
+Battery click toggles popup showing exact battery percentage with muted “Charge” label
+(or “Charging” while actively charging). Clicking popup title opens Battery settings. Clock click and `clock` shortcut open Google Calendar in the default browser; clock displays `Friday Oct 30 17:37`.
 Moving components in `init.lua` automatically renumbers
 registered actions; passive items consume no slots. Contextual AeroSpace service help keeps its own bindings.
 Hammerspoon dispatches Hyper+1–9 and Hyper+0 (slot 10) through `popup_toggle`.
@@ -109,8 +122,8 @@ falls back to IPv6; VPNs may appear as “Other”.
 ## Escape closes popups
 
 Press unmodified Escape while any shared popup is open to close all popups,
-including AeroSpace service help. Tap-generated Escape from Hyper is ignored by
-popup handling, so tapping Hyper alone does not close popups.
+including AeroSpace service help. Hyper does not generate Escape, so tapping
+Hyper alone does not close popups.
 Otherwise Escape passes to the focused app.
 Hammerspoon reads the shared popup-state lease; no subprocess polling. Holding
 Escape sends only one close event. Reload Hammerspoon after deployment.
@@ -137,6 +150,44 @@ Shift is accepted only for `+`.
 Uses existing Hammerspoon Accessibility permission;
 Secure Input can block capture. Reload Hammerspoon after deployment.
 
+## Brightness
+
+`components/brightness.lua` shows built-in display brightness as an icon
+beside battery. No available built-in display means no widget; external
+monitors are never brightness targets, even when primary. Click opens display
+slider and, only when supported, keyboard-backlight slider. Hyper+5 opens this
+popup; its numbered slot stays reserved when built-in display is unavailable.
+
+While popup is open, `-` and `+` (or unshifted `=`) adjust display brightness by
+5 percentage points. `[` and `]` adjust keyboard backlight by 5 only when available.
+Held keys use audio's 300ms initial delay and 75ms repeat interval. Hammerspoon
+applies slider changes during dragging, with serialized CLI writes and coalescing
+of pending values. Popup rows and hints use fixed widths. Closed popups leave typing
+unchanged. Reload Hammerspoon after deployment; its Accessibility permission is
+required. Release commits use Hammerspoon's bundled IPC CLI at
+`/Applications/Hammerspoon.app/Contents/Frameworks/hs/hs`; `init.lua` loads `hs.ipc`.
+Sequenced commits reject stale releases. Hardware refresh stays paused from release
+until its matching commit settles; older acknowledgements cannot unlock refresh.
+Pointer acknowledgements update labels without moving slider knobs, avoiding drag jitter.
+
+Homebrew installs [`brightness`](https://formulae.brew.sh/formula/brightness) from HEAD
+for Apple Silicon DisplayServices support, and
+[`rakalex/mac-brightnessctl/mac-brightnessctl`](https://github.com/rakalex/mac-brightnessctl)
+through the hashed package lifecycle wrapper. Shared `services/brightness.lua` parses
+`brightness -l`, accepting exactly one online built-in display with a valid level
+and an explicit hexadecimal ID that does not also select another display's index. Writes use
+`brightness -d ID LEVEL`, never main-display or all-display targeting. Keyboard
+controls require IOResources' `KeyboardBacklight = Yes` and a valid 0–1 reading from
+`mac-brightnessctl`; zero remains available. That CLI assumes keyboard ID 1 and
+cannot enumerate or verify built-in keyboard identity. Its setter reports requested
+values without verifying hardware success. Hardware support depends on upstream
+private macOS APIs. No gamma dimming, DDC control, or external-display fallback.
+
+Controls change manual levels only. Native automatic brightness does not disable
+manual display controls; neither display nor keyboard automatic settings are read
+or changed. macOS may later adapt brightness under its own policies. Widget refreshes
+hardware state every five seconds and on wake/display/brightness changes.
+
 ## Keep awake
 
 Coffee icon or **Hyper+2** directly toggles `caffeinate -di`: prevent idle
@@ -149,13 +200,34 @@ sleeping Mac still overrides idle-sleep prevention.
 
 ## System load
 
-System chip shows CPU and RAM percentages; click or **Hyper+1** opens details.
-Native `top`, `vm_stat`, `sysctl` and `memory_pressure -Q` refresh every ten seconds,
+System icon click or **Hyper+1** opens CPU, RAM and disk usage percentages, plus
+used/total RAM and disk space in GiB. CPU temperature appears below CPU usage in °C.
+Homebrew `macmon` supplies average CPU temperature on Apple Silicon without sudo,
+using private macOS sensor APIs; missing tools or invalid readings show `Unavailable`.
+Clicking popup title opens Activity Monitor.
+Native `top`, `vm_stat`, `sysctl`, `df` and `ps` refresh every ten seconds,
 on wake and on opening. CPU uses the second one-second sample, not boot averages.
 RAM used is active + wired + compressor pages; excludes reclaimable inactive pages.
-Popup shows used/total RAM, compressed RAM, memory available from macOS pressure
-accounting, swap used and 1/5/15-minute load averages (not CPU percentages).
-Failed reads show unavailable values. No background network requests.
+Disk usage shows read/write throughput in MiB/s from native `ioreg` byte counters,
+averaged between refreshes across physical disks. First sample, counter resets or
+device changes show `—` until another sample. Throughput stays text-colored; it does
+not measure disk saturation. Disk used shows used percentage; Disk used / total
+shows GiB. Storage stats use `/System/Volumes/Data`; used space is capacity minus
+available space, including other volumes sharing the APFS container.
+Below separator, three apps show combined process CPU percentages and resident RAM
+in GiB, ranked by CPU with RAM breaking ties. Processes inside the same outermost
+`.app` bundle are grouped; standalone processes are excluded. Process CPU readings
+come from `ps` and can exceed 100% across cores; resident RAM can count shared pages
+more than once. Failed reads show unavailable values. No background network requests.
+Values use default theme text color below warning thresholds, then warning/error colors.
+CPU and RAM warn at 70%, error at 90%;
+disk warns at 80%, errors at 90%; CPU temperature warns at 80°C, errors at 95°C.
+Used/total rows share their usage percentage color. App rows use the worse of CPU
+percentage (100% per core) and resident RAM as a percentage of total RAM, with
+70%/90% thresholds. Missing values stay muted. Colors indicate thresholds, not
+hardware-specific thermal limits or macOS memory-pressure assessments.
+Main bar icon uses the highest severity across CPU usage, CPU temperature and RAM;
+disk and per-app rows do not affect it. Normal or failed overall reads use text color.
 
 ## Installation and updates
 
@@ -216,7 +288,7 @@ not eliminate event-tap overhead. No private macOS APIs or SIP changes used.
 `~/.hammerspoon/hyperkey.lua` uses native
 `hidutil` to map Caps Lock to F18 while preserving other HID mappings, then
 Hammerspoon maps held F18 to Command+Option+Control+Shift on keyboard events.
-Tap Caps Lock for Escape. Caps+Return opens cmux,
+Tapping Caps Lock sends no key. Caps+Return opens cmux,
 Caps+B Firefox, Caps+C Visual Studio Code, Caps+O OpenCode. Vicinae owns app shortcuts
 except Firefox: Hammerspoon waits for Caps Lock, B, and modifiers to release before
 launching Firefox, avoiding Option-triggered Troubleshoot Mode.

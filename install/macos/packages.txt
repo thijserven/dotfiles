@@ -46,6 +46,9 @@ brew "felixkratz/formulae/borders", trusted: true
 brew "felixkratz/formulae/sketchybar", trusted: true
 brew "smudge/smudge/nightlight", trusted: true
 brew "switchaudio-osx"
+brew "macmon"
+brew "brightness", args: ["HEAD"]
+brew "rakalex/mac-brightnessctl/mac-brightnessctl", trusted: true
 brew "lotyp/formulae/dockutil", trusted: true
 
 # Fonts

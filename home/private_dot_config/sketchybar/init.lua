@@ -36,7 +36,7 @@ sbar.default({
 
 -- Insertion order controls layout; right-side items grow inward.
 local shortcuts = require("ui.shortcuts")
-for _, name in ipairs({ "aerospace", "current_app", "battery", "audio", "network", "coffee", "system" }) do
+for _, name in ipairs({ "aerospace", "current_app", "clock", "battery", "brightness", "audio", "network", "coffee", "system" }) do
   -- Contextual AeroSpace service help keeps its own bindings, not numbered slots.
   shortcuts.enabled = name ~= "aerospace" and name ~= "current_app"
   require("components." .. name)(sbar, theme)

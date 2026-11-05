@@ -1,4 +1,6 @@
 -- Own process state, not UI. Cancellation keeps run locked until process exits.
+local shell = require("services.shell")
+
 return function(sbar, notify)
   local running, cancelled, directory = false, false, nil
   local helper = 'sh "$HOME/.config/sketchybar/services/network_speedtest.sh" '
@@ -6,7 +8,7 @@ return function(sbar, notify)
 
   local function cancel_process()
     if directory then
-      sbar.exec(helper .. "cancel '" .. directory .. "'")
+      sbar.exec(helper .. "cancel " .. shell.quote(directory))
     end
   end
 
@@ -39,7 +41,7 @@ return function(sbar, notify)
     if cancelled then
       cancel_process()
     end
-    sbar.exec(helper .. "run '" .. directory .. "'", finish)
+    sbar.exec(helper .. "run " .. shell.quote(directory), finish)
   end
 
   function speedtest.start()

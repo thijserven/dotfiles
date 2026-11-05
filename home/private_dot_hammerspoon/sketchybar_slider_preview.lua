@@ -3,8 +3,11 @@ local binary = hs.execute("PATH=/opt/homebrew/bin:/usr/local/bin:$PATH command -
 local task
 local last_percentage
 
-function preview.update(visibility)
-  if not visibility["audio-popup"] or not hs.eventtap.checkMouseButtons().left then
+local bar_alive = true
+
+function preview.update(visibility, alive)
+  bar_alive = alive ~= false
+  if not bar_alive or not visibility["audio-popup"] or not hs.eventtap.checkMouseButtons().left then
     last_percentage = nil
     return
   end
@@ -22,7 +25,7 @@ function preview.update(visibility)
     local value = ok and type(item) == "table" and type(item.slider) == "table"
       and tonumber(item.slider.percentage)
     if not value or value ~= value or value < 0 or value > 100
-      or value == last_percentage or not visibility["audio-popup"]
+      or value == last_percentage or not bar_alive or not visibility["audio-popup"]
       or not hs.eventtap.checkMouseButtons().left then
       task = nil
       return
