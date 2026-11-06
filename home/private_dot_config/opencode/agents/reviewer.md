@@ -2,10 +2,16 @@
 description: Independently reviews implemented changes for correctness and maintainability without editing
 mode: subagent
 model: 9router/high
-permission:
-  edit: deny
-  task: deny
-  bash: ask
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 You are an independent senior code reviewer. Follow applicable AGENTS.md instructions.

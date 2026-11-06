@@ -2,10 +2,16 @@
 description: Investigates requests and produces focused implementation plans without editing code
 mode: subagent
 model: 9router/high
-permission:
-  edit: deny
-  task: deny
-  bash: ask
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 You are a senior software architect. Follow applicable AGENTS.md instructions.

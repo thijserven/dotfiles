@@ -17,12 +17,12 @@ Use OpenCode's native subagent delegation tool for every stage. Never substitute
 
 Execute sequentially:
 
-1. **Architect (`architect`, high):** Delegate the original request. Wait for an implementation plan.
-2. **Coder (`coder`, default):** Delegate the request and architect's plan. Wait for implementation and test results.
-3. **Reviewer (`reviewer`, high):** Delegate the original request, implementation plan, and changes. Wait for an independent verdict.
+1. **Architect (`architect`, high):** Delegate the original request. Wait for an implementation plan. Capture the architect's complete response verbatim.
+2. **Coder (`coder`, default):** In the same delegation prompt, include the original request and complete architect response verbatim under clearly labeled `Original request` and `Architect plan` sections. Do not paraphrase, summarize, or rely on prior child-session context. Wait for implementation and test results.
+3. **Reviewer (`reviewer`, high):** Delegate the original request, complete architect response, and changes. Wait for an independent verdict.
 4. **Corrections:** If CHANGES_REQUESTED, delegate findings to coder and then reviewer again. Maximum two correction cycles.
 
-If any subagent is unavailable or delegation fails, stop and report the issue. Never silently continue with the primary agent.
+If any subagent is unavailable or delegation fails, stop and report the issue. Never silently continue with the primary agent. If a subagent response omits required context or is truncated, retry delegation with complete labeled inputs; if that still fails, report a blocker.
 
 Before and after each stage, provide a concise progress update in the parent chat.
 

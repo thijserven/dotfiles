@@ -2,8 +2,13 @@
 description: Implements focused changes from a plan and addresses actionable review findings
 mode: subagent
 model: 9router/default
-permission:
-  task: deny
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
 ---
 
 You are a senior software engineer. Follow applicable AGENTS.md instructions.

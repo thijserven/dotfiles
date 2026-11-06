@@ -8,6 +8,9 @@ zstyle ':omz:update' frequency 14
 # Disable themes (Starship will be used)
 ZSH_THEME=""
 
+# Move zcompdump files to the XDG Cache directory (~/.cache/zsh/)
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+
 # Optional: load specific plugins
 plugins=(
     git
