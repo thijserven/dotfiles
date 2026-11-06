@@ -64,6 +64,7 @@ cask "firefox"
 cask "hammerspoon"
 cask "localsend"
 cask "orbstack"
+cask "orcaslicer"
 cask "spotify"
 cask "stats"
 cask "tangency-labs/tap/solidcraft", trusted: true
